@@ -9,6 +9,6 @@
     <ImageView
         android:id="@+id/imgV_item_poster"
         android:src="@mipmap/ic_launcher_affandi_movie"
-        android:layout_width="180dp"
+        android:layout_width="185dp"
         android:layout_height="216dp"/>
 </LinearLayout>
