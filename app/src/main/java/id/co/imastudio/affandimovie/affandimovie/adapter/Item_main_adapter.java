@@ -7,28 +7,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.util.List;
+import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
 
-import id.co.imastudio.affandimovie.affandimovie.model.MoviePosterModel;
 
 /**
  * Created by Ingat Mati on 09/07/2017.
  */
 
-public class Item_main_adapter extends ArrayAdapter<MoviePosterModel> {
+public class Item_main_adapter extends ArrayAdapter<DataMovieParser.Creator> {
     private static final String LOG_TAG = Item_main_adapter.class.getSimpleName();
 
-    public Item_main_adapter(Activity context, List<MoviePosterModel> androidFlavors) {
-        super(context, 0, androidFlavors);
+    public Item_main_adapter(Activity context) {
+        super(context, 0);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MoviePosterModel androidFlavor = getItem(position);
+        //MoviePosterModel androidFlavor = getItem(position);
 
        /* if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_flavor, parent, false);

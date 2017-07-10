@@ -22,6 +22,7 @@
     <string name="title_setting">Setting</string>
     <string name="item_setting">Setting</string>
     <string name="item_refresh">Refresh</string>
+    <string name="confirm_preference">OK</string>
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
         <item>Popular</item>
