@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -21,20 +22,26 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+
+import id.co.imastudio.affandimovie.affandimovie.adapter.ItemMainAdapter;
 import id.co.imastudio.affandimovie.affandimovie.constant.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
+import id.co.imastudio.affandimovie.affandimovie.model.MovieItem;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 
 public class MainPosterActivity extends AppCompatActivity {
     DataMovieParser dataMovieParser;
     int statusOrder = PreferenceSettingOrder.STATE_ORDER;
     String urlRequest;
+    GridView gvPoster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_poster);
-
+        gvPoster = (GridView) findViewById(R.id.gridView_fragment_main_poster);
+        requestDataPosterMovie();
     }
 
     private void setUrlRequestBaseOnSetting() {
@@ -89,7 +96,9 @@ public class MainPosterActivity extends AppCompatActivity {
 
                 /*mainAdapterItem = new AdapterItem(getApplicationContext(), itemObject.listplanet);
                 rclListItem.setAdapter(mainAdapterItem);*/
+                    ItemMainAdapter adapterPoster = new ItemMainAdapter(getApplicationContext(), dataMovieParser.results);
 
+                    gvPoster.setAdapter(adapterPoster);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -102,12 +111,14 @@ public class MainPosterActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You are offline", Toast.LENGTH_LONG).show();
         }
     }
+
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
     private void goToSetting() {
         Intent goSetting = new Intent(this, SettingsActivity.class);
         startActivity(goSetting);
