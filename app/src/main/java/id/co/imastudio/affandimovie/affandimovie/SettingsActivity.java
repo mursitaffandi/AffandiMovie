@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends ActionBarActivity {
+    private static int index;
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -72,14 +74,26 @@ public class SettingsActivity extends ActionBarActivity {
         // updated to reflect the new value, per the Android Design
         // guidelines.
     }
-    public static class PreferenceDataShow extends PreferenceFragment{
+
+    public static class PreferenceDataShow extends PreferenceFragment {
+        ListPreference listPreferenceOrder;
         @Override
-        public void onCreate(final Bundle savedInstanceState){
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
+            listPreferenceOrder = (ListPreference) findPreference("example_list");
+            listPreferenceOrder.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String value = listPreferenceOrder.getValue();
+                    index = listPreferenceOrder.findIndexOfValue(value);
+                    return false;
+                }
+            });
             bindPreferenceSummaryToValue(findPreference("example_list"));
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -91,6 +105,7 @@ public class SettingsActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_confirm) {
+            Toast.makeText(this, String.valueOf(index), Toast.LENGTH_SHORT).show();
             finish();
             return true;
         }
@@ -106,6 +121,7 @@ public class SettingsActivity extends ActionBarActivity {
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                        .getString(preference.getKey(), "")
+        );
     }
 }
