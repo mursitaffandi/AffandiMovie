@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array name="short_by">
+            <item name="1">Popular</item>
+            <item name="2">Top Rated</item>
+        </string-array>
+</resources>
