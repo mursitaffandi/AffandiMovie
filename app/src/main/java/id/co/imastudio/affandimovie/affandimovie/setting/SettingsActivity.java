@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie;
+package id.co.imastudio.affandimovie.affandimovie.setting;
 
 
 import android.annotation.TargetApi;
@@ -26,6 +26,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import id.co.imastudio.affandimovie.affandimovie.R;
+import id.co.imastudio.affandimovie.affandimovie.constant.PreferenceSettingOrder;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -38,7 +41,7 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends ActionBarActivity {
-    private static int index;
+    private static int indexSelected;
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -86,7 +89,7 @@ public class SettingsActivity extends ActionBarActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     String value = listPreferenceOrder.getValue();
-                    index = listPreferenceOrder.findIndexOfValue(value);
+                    indexSelected = listPreferenceOrder.findIndexOfValue(value);
                     return false;
                 }
             });
@@ -105,7 +108,8 @@ public class SettingsActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_confirm) {
-            Toast.makeText(this, String.valueOf(index), Toast.LENGTH_SHORT).show();
+            PreferenceSettingOrder.STATE_ORDER = indexSelected;
+            Toast.makeText(this, String.valueOf(indexSelected), Toast.LENGTH_SHORT).show();
             finish();
             return true;
         }
