@@ -1,33 +1,20 @@
 package id.co.imastudio.affandimovie.affandimovie.setting;
 
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import java.util.List;
 
 import id.co.imastudio.affandimovie.affandimovie.R;
-import id.co.imastudio.affandimovie.affandimovie.constant.PreferenceSettingOrder;
+import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -109,7 +96,7 @@ public class SettingsActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_confirm) {
             PreferenceSettingOrder.STATE_ORDER = indexSelected;
-            Toast.makeText(this, String.valueOf(indexSelected), Toast.LENGTH_SHORT).show();
+            Log.d("index_selected", String.valueOf(indexSelected));
             finish();
             return true;
         }

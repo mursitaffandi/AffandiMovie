@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -24,13 +22,12 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import id.co.imastudio.affandimovie.affandimovie.adapter.ItemMainAdapter;
-import id.co.imastudio.affandimovie.affandimovie.constant.PreferenceSettingOrder;
+import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 
 public class MainPosterActivity extends AppCompatActivity {
     DataMovieParser dataMovieParser;
-    int statusOrder = PreferenceSettingOrder.STATE_ORDER;
     String urlRequest;
     GridView gvPoster;
 
@@ -92,16 +89,9 @@ public class MainPosterActivity extends AppCompatActivity {
                     Log.d("url", urlRequest);
                     Log.d("Order", String.valueOf(PreferenceSettingOrder.STATE_ORDER));
 
-                /*mainAdapterItem = new AdapterItem(getApplicationContext(), itemObject.listplanet);
-                rclListItem.setAdapter(mainAdapterItem);*/
                     ItemMainAdapter adapterPoster = new ItemMainAdapter(getApplicationContext(), dataMovieParser.results);
                     gvPoster.setAdapter(adapterPoster);
-                    gvPoster.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        }
-                    });
                 }
             }, new Response.ErrorListener() {
                 @Override

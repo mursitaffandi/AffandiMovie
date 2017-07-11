@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.constant;
+package id.co.imastudio.affandimovie.affandimovie.global;
 
 /**
  * Created by Ingat Mati on 10/07/2017.
