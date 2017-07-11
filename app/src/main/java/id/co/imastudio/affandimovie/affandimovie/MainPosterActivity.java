@@ -23,13 +23,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
-
 import id.co.imastudio.affandimovie.affandimovie.adapter.ItemMainAdapter;
 import id.co.imastudio.affandimovie.affandimovie.constant.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
-import id.co.imastudio.affandimovie.affandimovie.model.MovieItem;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 
 public class MainPosterActivity extends AppCompatActivity {

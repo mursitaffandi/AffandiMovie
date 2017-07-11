@@ -20,7 +20,6 @@ import java.util.List;
 import id.co.imastudio.affandimovie.affandimovie.DetailMovieActivity;
 import id.co.imastudio.affandimovie.affandimovie.R;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
-import id.co.imastudio.affandimovie.affandimovie.model.MovieItem;
 
 
 /**
