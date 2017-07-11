@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -97,8 +99,13 @@ public class MainPosterActivity extends AppCompatActivity {
                 /*mainAdapterItem = new AdapterItem(getApplicationContext(), itemObject.listplanet);
                 rclListItem.setAdapter(mainAdapterItem);*/
                     ItemMainAdapter adapterPoster = new ItemMainAdapter(getApplicationContext(), dataMovieParser.results);
-
                     gvPoster.setAdapter(adapterPoster);
+                    gvPoster.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        }
+                    });
                 }
             }, new Response.ErrorListener() {
                 @Override

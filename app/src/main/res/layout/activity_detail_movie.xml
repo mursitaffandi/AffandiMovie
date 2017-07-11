@@ -18,7 +18,8 @@
             android:singleLine="false"
             android:text="Title"
             android:textStyle="bold"
-            tools:textSize="26sp" />
+            tools:textSize="26sp"
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/tvReleaseDate"
@@ -32,9 +33,9 @@
         <ImageView
             android:id="@+id/ivPosterDetail"
             android:layout_width="185dp"
-            android:layout_height="185dp"
+            android:layout_height="216dp"
             android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher_affandi_movie" />
 
         <ImageView
             android:id="@+id/ivRate"
@@ -45,7 +46,17 @@
             android:layout_centerVertical="true"
             app:srcCompat="@android:drawable/btn_star_big_on" />
 
-        <EditText
+        <TextView
+            android:id="@+id/tvRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignEnd="@+id/tvOriginalTitle"
+            android:layout_alignRight="@+id/tvOriginalTitle"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp" />
+
+        <TextView
             android:id="@+id/tvSvnopsis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,22 +64,8 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/ivPosterDetail"
             android:layout_marginTop="45dp"
-            android:ems="10"
-            android:inputType="textMultiLine"
-            android:padding="3dp" />
-
-        <EditText
-            android:id="@+id/tvRate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/ivRate"
-            android:layout_alignTop="@+id/ivRate"
-            android:layout_toEndOf="@+id/tvReleaseDate"
-            android:layout_toLeftOf="@+id/ivRate"
-            android:layout_toRightOf="@+id/tvReleaseDate"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:padding="3dp"
+            android:text="this is description"/>
 
     </RelativeLayout>
 </ScrollView>
