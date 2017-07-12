@@ -17,8 +17,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.co.imastudio.affandimovie.affandimovie.DetailActivity;
 import id.co.imastudio.affandimovie.affandimovie.DetailMovieActivity;
 import id.co.imastudio.affandimovie.affandimovie.R;
+import id.co.imastudio.affandimovie.affandimovie.ScrollingActivity;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
 
 
@@ -73,7 +75,7 @@ public class ItemMainAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                Intent toDetail = new Intent(context, DetailMovieActivity.class);
+                Intent toDetail = new Intent(context, ScrollingActivity.class);
                 toDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 toDetail.putExtra("title", originalTitle);
                 toDetail.putExtra("poster_path",moviePoster);

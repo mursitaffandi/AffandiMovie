@@ -22,7 +22,25 @@
         <activity
             android:name=".setting.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".DetailMovieActivity"></activity>
+        <activity android:name=".DetailMovieActivity" />
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".MainPosterActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="id.co.imastudio.affandimovie.affandimovie.MainPosterActivity" />
+        </activity>
+        <activity
+            android:name=".ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:parentActivityName=".MainPosterActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="id.co.imastudio.affandimovie.affandimovie.MainPosterActivity" />
+        </activity>
     </application>
 
 </manifest>

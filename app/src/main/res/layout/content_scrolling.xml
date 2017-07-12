@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="id.co.imastudio.affandimovie.affandimovie.ScrollingActivity"
+    tools:showIn="@layout/activity_scrolling">
+
+   <!-- <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/large_text" />
+-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
+
+
+        <TextView
+            android:id="@+id/tvReleaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivPosterDetail"
+            android:text="@string/text_detail_releasedate"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/ivPosterDetail"
+            android:layout_width="128dp"
+            android:layout_height="216dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/ic_launcher_affandi_movie" />
+
+        <ImageView
+            android:id="@+id/ivRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ivPosterDetail"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
+
+        <TextView
+            android:id="@+id/tvRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ivRate"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvSvnopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivPosterDetail"
+            android:layout_marginTop="45dp"
+            android:padding="3dp"
+            android:text="@string/text_detail_description" />
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>
