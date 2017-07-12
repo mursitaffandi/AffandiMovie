@@ -8,6 +8,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,13 +28,14 @@ import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends ActionBarActivity {
-    private static int indexSelected;
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+public class SettingsActivity extends AppCompatActivity {
+    public static String indexSelected = "";
+
+    private static final Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
-
+            indexSelected = stringValue;
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
@@ -54,7 +56,6 @@ public class SettingsActivity extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.pref_with_actionbar);
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, new PreferenceDataShow()).commit();
@@ -72,14 +73,13 @@ public class SettingsActivity extends ActionBarActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             listPreferenceOrder = (ListPreference) findPreference("example_list");
-            listPreferenceOrder.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    String value = listPreferenceOrder.getValue();
-                    indexSelected = listPreferenceOrder.findIndexOfValue(value);
-                    return false;
-                }
-            });
+            if (PreferenceSettingOrder.STATE_ORDER == 0) {
+                listPreferenceOrder.setValueIndex(0);
+            }
+            if (PreferenceSettingOrder.STATE_ORDER == 1) {
+                listPreferenceOrder.setValueIndex(1);
+            }
+
             bindPreferenceSummaryToValue(findPreference("example_list"));
         }
     }
@@ -95,8 +95,8 @@ public class SettingsActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_confirm) {
-            PreferenceSettingOrder.STATE_ORDER = indexSelected;
-            Log.d("index_selected", String.valueOf(indexSelected));
+            PreferenceSettingOrder.STATE_ORDER = Integer.parseInt(indexSelected);
+            Log.d("index_selected", indexSelected);
             finish();
             return true;
         }

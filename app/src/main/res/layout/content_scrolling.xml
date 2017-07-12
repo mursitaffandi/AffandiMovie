@@ -5,20 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="id.co.imastudio.affandimovie.affandimovie.ScrollingActivity"
+    tools:context="id.co.imastudio.affandimovie.affandimovie.ScrollingDetailMovieActivity"
     tools:showIn="@layout/activity_scrolling">
 
-   <!-- <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
--->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
+        android:padding="10dp">
 
 
         <TextView
@@ -27,11 +20,11 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/ivPosterDetail"
             android:text="@string/text_detail_releasedate"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/ivPosterDetail"
-            android:layout_width="128dp"
+            android:layout_width="138dp"
             android:layout_height="216dp"
             android:layout_gravity="center_horizontal"
             android:src="@mipmap/ic_launcher_affandi_movie" />
@@ -53,7 +46,7 @@
             android:text="" />
 
         <TextView
-            android:id="@+id/tvSvnopsis"
+            android:id="@+id/tvSynopsis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

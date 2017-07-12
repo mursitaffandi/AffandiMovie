@@ -1,42 +1,32 @@
 package id.co.imastudio.affandimovie.affandimovie.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import id.co.imastudio.affandimovie.affandimovie.DetailActivity;
-import id.co.imastudio.affandimovie.affandimovie.DetailMovieActivity;
 import id.co.imastudio.affandimovie.affandimovie.R;
-import id.co.imastudio.affandimovie.affandimovie.ScrollingActivity;
+import id.co.imastudio.affandimovie.affandimovie.ScrollingDetailMovieActivity;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
 
 
-/**
- * Created by Ingat Mati on 09/07/2017.
- */
 
 public class ItemMainAdapter extends BaseAdapter {
-    Context context;
-    String url_image;
-    List<DataMovieParser.Result> movies;
+    private final Context context;
+    private final String url_image;
+    private final List<DataMovieParser.Result> movies;
 
     public ItemMainAdapter(Context context, List<DataMovieParser.Result> movies) {
         this.context = context;
         this.movies = movies;
-        url_image = context.getResources().getString(R.string.base_url_image) + context.getResources().getString(R.string.size_poster_image_recomended);
+        url_image = context.getResources().getString(R.string.base_url_image) + context.getResources().getString(R.string.size_poster_image_recommended);
     }
 
     @Override
@@ -75,7 +65,7 @@ public class ItemMainAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                Intent toDetail = new Intent(context, ScrollingActivity.class);
+                Intent toDetail = new Intent(context, ScrollingDetailMovieActivity.class);
                 toDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 toDetail.putExtra("title", originalTitle);
                 toDetail.putExtra("poster_path",moviePoster);

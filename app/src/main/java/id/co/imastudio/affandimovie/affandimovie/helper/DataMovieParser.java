@@ -22,7 +22,7 @@ public class DataMovieParser implements Parcelable
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    public List<Result> results = new ArrayList<Result>();
+    public List<Result> results = new ArrayList<>();
     public final static Creator<DataMovieParser> CREATOR = new Creator<DataMovieParser>() {
 
 
@@ -141,7 +141,7 @@ public class DataMovieParser implements Parcelable
         private String originalTitle;
         @SerializedName("genre_ids")
         @Expose
-        private List<Integer> genreIds = new ArrayList<Integer>();
+        private List<Integer> genreIds = new ArrayList<>();
         @SerializedName("backdrop_path")
         @Expose
         private String backdropPath;

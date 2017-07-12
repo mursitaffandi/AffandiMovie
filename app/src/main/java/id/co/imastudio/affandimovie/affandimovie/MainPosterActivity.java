@@ -21,22 +21,36 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import id.co.imastudio.affandimovie.affandimovie.adapter.ItemMainAdapter;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 
 public class MainPosterActivity extends AppCompatActivity {
-    DataMovieParser dataMovieParser;
-    String urlRequest;
-    GridView gvPoster;
+    private DataMovieParser dataMovieParser;
+    private String urlRequest;
+    private GridView gvPoster;
+    private int status_load_movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_poster);
         gvPoster = (GridView) findViewById(R.id.gridView_fragment_main_poster);
-        requestDataPosterMovie();
+        status_load_movie = 3;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(status_load_movie == 3){
+            status_load_movie = PreferenceSettingOrder.STATE_ORDER;
+            requestDataPosterMovie();
+        } else if (status_load_movie != PreferenceSettingOrder.STATE_ORDER){
+            status_load_movie = PreferenceSettingOrder.STATE_ORDER;
+            requestDataPosterMovie();
+        }
     }
 
     private void setUrlRequestBaseOnSetting() {
@@ -66,7 +80,7 @@ public class MainPosterActivity extends AppCompatActivity {
             case R.id.menu_item_setting:
                 goToSetting();
                 return true;
-            case R.id.menu_item_resfresh:
+            case R.id.menu_item_refresh:
                 requestDataPosterMovie();
                 return true;
             default:
@@ -105,7 +119,7 @@ public class MainPosterActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
