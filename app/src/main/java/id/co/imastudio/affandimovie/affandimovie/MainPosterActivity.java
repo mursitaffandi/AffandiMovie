@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +21,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import id.co.imastudio.affandimovie.affandimovie.adapter.ItemMainAdapter;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
@@ -30,14 +31,14 @@ import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 public class MainPosterActivity extends AppCompatActivity {
     private DataMovieParser dataMovieParser;
     private String urlRequest;
-    private GridView gvPoster;
     private int status_load_movie;
+    @BindView(R.id.gridView_fragment_main_poster) GridView gvPoster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_poster);
-        gvPoster = (GridView) findViewById(R.id.gridView_fragment_main_poster);
+        ButterKnife.bind(this);
         status_load_movie = 3;
     }
 
@@ -98,10 +99,6 @@ public class MainPosterActivity extends AppCompatActivity {
                     GsonBuilder gsonBuilder = new GsonBuilder();
                     Gson gson = gsonBuilder.create();
                     dataMovieParser = gson.fromJson(response, DataMovieParser.class);
-
-                    Log.d("respons", response);
-                    Log.d("url", urlRequest);
-                    Log.d("Order", String.valueOf(PreferenceSettingOrder.STATE_ORDER));
 
                     ItemMainAdapter adapterPoster = new ItemMainAdapter(getApplicationContext(), dataMovieParser.results);
                     gvPoster.setAdapter(adapterPoster);

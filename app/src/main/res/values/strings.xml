@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Affandi Movie</string>
-
+    <string name="content_description_item_poster">image item poster</string>
+    <string name="content_description_icon_rate">icon rate</string>
+    <string name="content_description_poster_detail">poster movie</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_settings">Settings</string>
 
@@ -20,7 +22,7 @@
     <string name="text_detail_releasedate">YYYY-MM-DD</string>
     <!--URI Rest API tmdb.org-->
     <string name="url_json_popular_movie">http://api.themoviedb.org/3/movie/popular?api_key=</string>
-    <string name="url_json_toprated_movie">http://api.themoviedb.org/3/top_rated?api_key=</string>
+    <string name="url_json_toprated_movie">http://api.themoviedb.org/3/movie/top_rated?api_key=</string>
     <string name="MY_TMDB_API_KEY"><!--put here your tmdb API KEY--></string>
     <string name="base_url_image">http://image.tmdb.org/t/p/</string>
     <!--size_poster_image_-->
@@ -33,5 +35,4 @@
     <string name="size_poster_image_original">original/</string>
     <string name="size_poster_image_recommended">w185/</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="action_settings">Settings</string>
 </resources>
