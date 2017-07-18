@@ -60,5 +60,8 @@
             android:layout_marginTop="45dp"
             android:padding="3dp"
             android:text="@string/text_detail_description" />
+
+        <include layout="@layout/content_trailer" />
+
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -6,6 +6,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.co.imastudio.affandimovie.affandimovie.adapter.ItemMainAdapter;
+import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemMainPoster;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.helper.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
@@ -32,13 +36,20 @@ public class MainPosterActivity extends AppCompatActivity {
     private DataMovieParser dataMovieParser;
     private String urlRequest;
     private int status_load_movie;
+    private LinearLayoutManager linearLayoutManager;
+
+
     @BindView(R.id.gridView_fragment_main_poster) GridView gvPoster;
+    @BindView(R.id.rcView_main_poster) RecyclerView rcViewMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_poster);
         ButterKnife.bind(this);
+
+        GridLayoutManager manager = new GridLayoutManager(this, 2);
+        rcViewMain.setLayoutManager(manager);
         status_load_movie = 3;
     }
 
@@ -100,8 +111,11 @@ public class MainPosterActivity extends AppCompatActivity {
                     Gson gson = gsonBuilder.create();
                     dataMovieParser = gson.fromJson(response, DataMovieParser.class);
 
-                    ItemMainAdapter adapterPoster = new ItemMainAdapter(getApplicationContext(), dataMovieParser.results);
-                    gvPoster.setAdapter(adapterPoster);
+//                    ItemMainAdapter adapterPoster = new ItemMainAdapter(getApplicationContext(), dataMovieParser.results);
+//                    gvPoster.setAdapter(adapterPoster);
+
+                    RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
+                    rcViewMain.setAdapter(adaterItemPoster);
 
                 }
             }, new Response.ErrorListener() {
