@@ -13,8 +13,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.greenrobot.eventbus.EventBus;
+
 import id.co.imastudio.affandimovie.affandimovie.R;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
+import id.co.imastudio.affandimovie.affandimovie.model.MessageEvent;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -78,7 +81,6 @@ public class SettingsActivity extends AppCompatActivity {
             if (PreferenceSettingOrder.STATE_ORDER == 1) {
                 listPreferenceOrder.setValueIndex(1);
             }
-
             bindPreferenceSummaryToValue(findPreference("example_list"));
         }
     }
@@ -94,8 +96,11 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_confirm) {
-            PreferenceSettingOrder.STATE_ORDER = Integer.parseInt(indexSelected);
-            Log.d("index_selected", indexSelected);
+            if (Integer.parseInt(indexSelected) != PreferenceSettingOrder.STATE_ORDER){
+                PreferenceSettingOrder.STATE_ORDER = Integer.parseInt(indexSelected);
+                EventBus.getDefault().post(new MessageEvent(true));
+                Log.d("index_selected", indexSelected);
+            }
             finish();
             return true;
         }

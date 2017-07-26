@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.helper;
+package id.co.imastudio.affandimovie.affandimovie.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,11 +14,12 @@ import id.co.imastudio.affandimovie.affandimovie.R;
 
 public class HolderRecycleMainPoster extends RecyclerView.ViewHolder {
 
-   public @BindView(R.id.imgV_item_poster) ImageView imgVPoster;
-//public ImageView imgVPoster;
+    public
+    @BindView(R.id.imgV_item_poster)
+    ImageView imgVPoster;
+
     public HolderRecycleMainPoster(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
-//        imgVPoster = (ImageView) itemView.findViewById(R.id.imgV_item_poster);
+        ButterKnife.bind(this, itemView);
     }
 }

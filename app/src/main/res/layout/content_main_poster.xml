@@ -5,15 +5,6 @@
     android:layout_height="match_parent"
     tools:context="id.co.imastudio.affandimovie.affandimovie.MainPosterActivity">
 
-    <GridView
-        android:id="@+id/gridView_fragment_main_poster"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:numColumns="2"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        android:verticalScrollbarPosition="right" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcView_main_poster"
         android:layout_width="match_parent"

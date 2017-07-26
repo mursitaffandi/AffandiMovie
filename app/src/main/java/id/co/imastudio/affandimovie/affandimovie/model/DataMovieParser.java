@@ -1,5 +1,4 @@
-
-package id.co.imastudio.affandimovie.affandimovie.helper;
+package id.co.imastudio.affandimovie.affandimovie.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +108,7 @@ public class DataMovieParser implements Parcelable
     public int describeContents() {
         return  0;
     }
-    public class Result implements Parcelable
+    public static class Result implements Parcelable
     {
 
         @SerializedName("vote_count")
@@ -154,7 +153,7 @@ public class DataMovieParser implements Parcelable
         @SerializedName("release_date")
         @Expose
         private String releaseDate;
-        public final Creator<Result> CREATOR = new Creator<Result>() {
+        public static final Creator<Result> CREATOR = new Creator<Result>() {
 
 
             @SuppressWarnings({
@@ -210,6 +209,7 @@ public class DataMovieParser implements Parcelable
          * @param video
          * @param popularity
          */
+
         public Result(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
             super();
             this.voteCount = voteCount;
