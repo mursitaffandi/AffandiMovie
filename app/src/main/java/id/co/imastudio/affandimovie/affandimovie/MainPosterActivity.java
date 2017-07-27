@@ -6,11 +6,9 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,25 +35,22 @@ import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.model.MessageEvent;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
-import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclervierItemClick;
+import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
 
 
 public class MainPosterActivity extends AppCompatActivity {
     private DataMovieParser dataMovieParser;
     private String urlRequest;
-    private int status_load_movie;
-    private GridLayoutManager manager;
     @BindView(R.id.rcView_main_poster)
     RecyclerView rcViewMain;
-    private final String TAG_PARCEL = "parcel";
+    private final String TAG_MOVIE_PARCEL = "parcel_movie";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_poster);
         ButterKnife.bind(this);
 
-        manager = new GridLayoutManager(this, 2);
-        status_load_movie = 3;
+        GridLayoutManager manager = new GridLayoutManager(this, 2);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             manager.setSpanCount(2);
@@ -68,11 +63,11 @@ public class MainPosterActivity extends AppCompatActivity {
             requestDataPosterMovie();
         } else {
 //            manager.onRestoreInstanceState(stateGridManager);
-            dataMovieParser = savedInstanceState.getParcelable(TAG_PARCEL);
+            dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
             RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
             rcViewMain.setAdapter(adaterItemPoster);
         }
-        rcViewMain.addOnItemTouchListener(new CustomRecyclervierItemClick(getApplicationContext(), new CustomRecyclervierItemClick.OnItemClickListener() {
+        rcViewMain.addOnItemTouchListener(new CustomRecyclerviewItemClick(getApplicationContext(), new CustomRecyclerviewItemClick.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent toDetail = new Intent(view.getContext(), DetailMovieActivity.class);
@@ -86,14 +81,14 @@ public class MainPosterActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //stateGridManager = manager.onSaveInstanceState();
-        outState.putParcelable(TAG_PARCEL, dataMovieParser);
+        outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         /*if (savedInstanceState != null)
-            stateGridManager = savedInstanceState.getParcelable(TAG_PARCEL);*/
+            stateGridManager = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);*/
     }
 
     @Override

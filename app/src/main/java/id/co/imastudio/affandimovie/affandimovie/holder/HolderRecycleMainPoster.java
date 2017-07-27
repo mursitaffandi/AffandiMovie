@@ -8,9 +8,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.co.imastudio.affandimovie.affandimovie.R;
 
-/**
- * Created by Ingat Mati on 18/07/2017.
- */
 
 public class HolderRecycleMainPoster extends RecyclerView.ViewHolder {
 

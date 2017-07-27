@@ -1,15 +1,10 @@
 package id.co.imastudio.affandimovie.affandimovie.helper;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by Ingat Mati on 25/07/2017.
- */
-
-public class DatabaseManager extends SQLiteOpenHelper {
+class DatabaseManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_NAME = "db_movie";
@@ -42,7 +37,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String COLUMN_REVIEW_URL = "review_url";
 
     //Query create table movie
-    String CREATE_TABLE_MOVIE = "CREATE TABLE " + TABLE_MOVIE_NAME + "("
+    private final String CREATE_TABLE_MOVIE = "CREATE TABLE " + TABLE_MOVIE_NAME + "("
             + COLUMN_MOVIE_ID_TB + " INTEGER PRIMARY KEY,"
             + COLUMN_MOVIE_ID + " INTEGER,"
             + COLUMN_MOVIE_RATE + " CHARACTER,"
@@ -54,7 +49,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             + ")";
 
     //Query create table trailer
-    String CREATE_TABLE_TRAILER = "CREATE TABLE " + TABLE_TRAILER_NAME + "("
+    private final String CREATE_TABLE_TRAILER = "CREATE TABLE " + TABLE_TRAILER_NAME + "("
             + COLUMN_TRAILER_ID_TB + " INTEGER PRIMARY KEY,"
             + COLUMN_TRAILER_PARENT_ID + " INTEGER,"
             + COLUMN_TRAILER_KEY + " CHARACTER,"
@@ -62,7 +57,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             + ")";
 
     //Query create table review
-    String CREATE_TABLE_REVIEW = "CREATE TABLE " + TABLE_REVIEW_NAME + "("
+    private final String CREATE_TABLE_REVIEW = "CREATE TABLE " + TABLE_REVIEW_NAME + "("
             + COLUMN_REVIEW_ID_TB + " INTEGER PRIMARY KEY,"
             + COLUMN_REVIEW_PARENT_ID + " INTEGER,"
             + COLUMN_REVIEW_ID + " VARCHAR,"

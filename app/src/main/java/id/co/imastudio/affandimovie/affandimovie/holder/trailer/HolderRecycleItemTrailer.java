@@ -8,15 +8,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.co.imastudio.affandimovie.affandimovie.R;
 
-/**
- * Created by Ingat Mati on 18/07/2017.
- */
 
 public class HolderRecycleItemTrailer extends RecyclerView.ViewHolder {
 
     public
-    @BindView(R.id.imgV_item_poster)
-    ImageView imgVPoster;
+    @BindView(R.id.trailerImage)
+    ImageView ivThumnailTrailer;
     public HolderRecycleItemTrailer(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);

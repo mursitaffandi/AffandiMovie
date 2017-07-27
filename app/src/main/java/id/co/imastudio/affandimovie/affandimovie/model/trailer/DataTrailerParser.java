@@ -14,7 +14,7 @@ public class DataTrailerParser implements Parcelable {
     private Integer id;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    public List<Result> results = null;
     public final static Parcelable.Creator<DataTrailerParser> CREATOR = new Creator<DataTrailerParser>() {
 
 
@@ -37,7 +37,7 @@ public class DataTrailerParser implements Parcelable {
     /**
      * No args constructor for use in serialization
      */
-    public DataTrailerParser() {
+    private DataTrailerParser() {
     }
 
     /**

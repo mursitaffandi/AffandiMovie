@@ -18,7 +18,7 @@ public class DataReviewParser implements Parcelable {
     private Integer page;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    public List<Result> results = null;
     @SerializedName("total_pages")
     @Expose
     private Integer totalPages;
@@ -50,7 +50,7 @@ public class DataReviewParser implements Parcelable {
     /**
      * No args constructor for use in serialization
      */
-    public DataReviewParser() {
+    private DataReviewParser() {
     }
 
     /**
