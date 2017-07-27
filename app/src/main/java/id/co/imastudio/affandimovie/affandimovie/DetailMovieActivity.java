@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,12 +35,12 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemMainPoster;
 import id.co.imastudio.affandimovie.affandimovie.adapter.review.RecycleItemReview;
 import id.co.imastudio.affandimovie.affandimovie.adapter.trailer.RecycleItemTrailer;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.model.review.DataReviewParser;
 import id.co.imastudio.affandimovie.affandimovie.model.trailer.DataTrailerParser;
+import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
 
 public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
@@ -56,9 +58,13 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
 
+    @BindView(R.id.rcV_detail_trailer)
     RecyclerView rvTrailer;
     @BindView(R.id.rcV_detail_review)
     RecyclerView rvReview;
+
+    @BindView(R.id.tvdetailnoReviewView)
+    TextView tvNotFoundReview;
 
     private DataMovieParser.Result dataMoviewParcel;
     private DataTrailerParser dataTrailerParcel;
@@ -66,8 +72,10 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     private String urlRequestTrailer;
     private String urlRequestReview;
+    private String sharedTrailerUrl = null;
+    private String sharedTrailerTitle;
 
-    LinearLayoutManager trailerLayoutManager;
+    LinearLayoutManager verticalLayoutManager;
     GsonBuilder gsonBuilder;
     Gson gson;
 
@@ -77,7 +85,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scrolling);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        rvTrailer = (RecyclerView)findViewById(R.id.rcV_detail_trailer);
+
         dataMoviewParcel = getIntent().getParcelableExtra("parcel");
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
@@ -113,12 +121,28 @@ public class DetailMovieActivity extends AppCompatActivity {
         tvsynopsis.setText(dataMoviewParcel.getOverview());
         tvuserRating.setText(String.valueOf(dataMoviewParcel.getVoteAverage()));
         tvreleaseDate.setText(dataMoviewParcel.getReleaseDate());
+        sharedTrailerTitle = dataMoviewParcel.getOriginalTitle();
 
-        trailerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvTrailer.setLayoutManager(trailerLayoutManager);
-
-        requestDataReview();
+        verticalLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvTrailer.setLayoutManager(verticalLayoutManager);
+        rvReview.setLayoutManager(new LinearLayoutManager(this));
         requestDataTrailer();
+        requestDataReview();
+
+        rvTrailer.addOnItemTouchListener(new CustomRecyclerviewItemClick(this, new CustomRecyclerviewItemClick.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                startActivity(
+                        new Intent(
+                                Intent.ACTION_VIEW
+                                , Uri.parse(
+                                getApplicationContext()
+                                        .getResources()
+                                        .getString(R.string.base_url_video_yt)
+                                        + dataTrailerParcel.results.get(position).getKey()
+                        )));
+            }
+        }));
     }
 
     @OnClick(R.id.btnSaveFavorite)
@@ -142,7 +166,12 @@ public class DetailMovieActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.menu_item_detail_share:
-                //goToSetting();
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Watch " + sharedTrailerTitle);
+                if (urlRequestTrailer != null)
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, sharedTrailerTitle + " " + sharedTrailerUrl);
+                startActivity(sharingIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -155,11 +184,12 @@ public class DetailMovieActivity extends AppCompatActivity {
             StringRequest strRequest = new StringRequest(Request.Method.GET, urlRequestTrailer, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-
                     dataTrailerParcel = gson.fromJson(response, DataTrailerParser.class);
                     RecycleItemTrailer adaterItemTrailer = new RecycleItemTrailer(getApplicationContext(), dataTrailerParcel.results);
                     rvTrailer.setAdapter(adaterItemTrailer);
                     adaterItemTrailer.notifyDataSetChanged();
+                    sharedTrailerUrl = getApplicationContext().getResources().getString(R.string.base_url_video_yt) + dataTrailerParcel.results.get(0).getKey();
+                    Log.d("json_trailer " + dataTrailerParcel.getId().toString(), response);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -178,9 +208,13 @@ public class DetailMovieActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     dataReviewParcel = gson.fromJson(response, DataReviewParser.class);
-                    RecycleItemReview adaterItemReview = new RecycleItemReview(getApplicationContext(), dataReviewParcel.results);
-                    rvTrailer.setAdapter(adaterItemReview);
-                    adaterItemReview.notifyDataSetChanged();
+                    if (dataReviewParcel.getTotalResults() > 0) {
+                        RecycleItemReview adaterItemReview = new RecycleItemReview(getApplicationContext(), dataReviewParcel.results);
+                        rvReview.setAdapter(adaterItemReview);
+                        adaterItemReview.notifyDataSetChanged();
+                    } else tvNotFoundReview.setVisibility(View.VISIBLE);
+                    Log.d("json_review " + dataReviewParcel.getId().toString(), response);
+
                 }
             }, new Response.ErrorListener() {
                 @Override

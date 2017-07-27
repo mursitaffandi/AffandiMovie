@@ -83,50 +83,52 @@
             android:text="Mark as Favorite" />
 
         <TextView
+            android:id="@+id/tvTrailer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tvSynopsis"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:text="Trailer"
             android:textColor="#000000"
-            android:textSize="25sp"
-            android:id="@+id/tvTrailer"
-            android:layout_below="@+id/tvSynopsis" />
+            android:textSize="25sp" />
 
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/rcV_detail_trailer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTrailer"
-            tools:context="id.co.imastudio.affandimovie.affandimovie.DetailMovieActivity"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"></android.support.v7.widget.RecyclerView>
+            ></android.support.v7.widget.RecyclerView>
 
         <TextView
+            android:id="@+id/tvReview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/rcV_detail_trailer"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:text="Review"
             android:textColor="#000000"
-            android:textSize="25sp"
-            android:id="@+id/tvReview"
-            android:layout_below="@+id/rcV_detail_trailer" />
+            android:textSize="25sp" />
 
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/rcV_detail_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tvReview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"></android.support.v7.widget.RecyclerView>
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+        </android.support.v7.widget.RecyclerView>
+
         <TextView
+            android:id="@+id/tvdetailnoReviewView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tvdetailnoReviewView"
-            android:textSize="20sp"
+            android:layout_below="@+id/tvReview"
             android:paddingLeft="15dp"
             android:text="No reviews available"
+            android:textSize="20sp"
             android:visibility="invisible" />
     </RelativeLayout>
 

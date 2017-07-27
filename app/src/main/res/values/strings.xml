@@ -30,6 +30,7 @@
     <string name="tail_url_trailer">/videos?api_key=</string>
     <string name="tail_url_review">/reviews?api_key=</string>
     <string name="base_url_thumnail_yt">http://img.youtube.com/vi/</string>
+    <string name="base_url_video_yt">https://www.youtube.com/watch?v=</string>
     <string name="size_image_yt_middle">/mqdefault.jpg</string>
     <!--size_poster_image_-->
     <string name="size_poster_image_w92">w92/</string>
