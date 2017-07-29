@@ -4,11 +4,35 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_BACKDROP;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_ID;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_ID_TB;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_POSTER;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_RATE;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_RELEASE;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_SYNOPSIS;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_TIMESTAMP;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.COLUMN_MOVIE_TITLE;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseMovie.MovieListEntry.TABLE_MOVIE_NAME;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.COLUMN_REVIEW_CONTENT;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.COLUMN_REVIEW_ID;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.COLUMN_REVIEW_ID_TB;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.COLUMN_REVIEW_PARENT_ID;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.COLUMN_REVIEW_TIMESTAMP;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.COLUMN_REVIEW_URL;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseReview.ReviewListEntry.TABLE_REVIEW_NAME;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseTrailer.TrailerListEntry.COLUMN_TRAILER_ID_TB;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseTrailer.TrailerListEntry.COLUMN_TRAILER_KEY;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseTrailer.TrailerListEntry.COLUMN_TRAILER_NAME;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseTrailer.TrailerListEntry.COLUMN_TRAILER_PARENT_ID;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseTrailer.TrailerListEntry.COLUMN_TRAILER_TIMESTAMP;
+import static id.co.imastudio.affandimovie.affandimovie.model.localdb.BaseTrailer.TrailerListEntry.TABLE_TRAILER_NAME;
+
 class DatabaseManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
-    private static final String DATABASE_NAME = "db_movie";
-    //    Table
+    private static final String DATABASE_NAME = "db_movie.db";
+   /* //    Table
     private static final String TABLE_MOVIE_NAME = "tb_movie";
     private static final String TABLE_TRAILER_NAME = "tb_trailer";
     private static final String TABLE_REVIEW_NAME = "tb_review";
@@ -35,34 +59,37 @@ class DatabaseManager extends SQLiteOpenHelper {
     private static final String COLUMN_REVIEW_ID = "review_id";
     private static final String COLUMN_REVIEW_CONTENT = "review_content";
     private static final String COLUMN_REVIEW_URL = "review_url";
-
+*/
     //Query create table movie
     private final String CREATE_TABLE_MOVIE = "CREATE TABLE " + TABLE_MOVIE_NAME + "("
-            + COLUMN_MOVIE_ID_TB + " INTEGER PRIMARY KEY,"
-            + COLUMN_MOVIE_ID + " INTEGER,"
-            + COLUMN_MOVIE_RATE + " CHARACTER,"
-            + COLUMN_MOVIE_TITLE + "VARCHAR,"
-            + COLUMN_MOVIE_POSTER + " VARCHAR,"
-            + COLUMN_MOVIE_SYNOPSIS + " TEXT,"
-            + COLUMN_MOVIE_RELEASE + " VARCHAR,"
-            + COLUMN_MOVIE_BACKDROP + " VARCHAR"
+            + COLUMN_MOVIE_ID_TB + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_MOVIE_ID + " INTEGER NOT NULL,"
+            + COLUMN_MOVIE_RATE + " CHARACTER NOT NULL,"
+            + COLUMN_MOVIE_TITLE + "VARCHAR NOT NULL,"
+            + COLUMN_MOVIE_POSTER + " VARCHAR NOT NULL,"
+            + COLUMN_MOVIE_SYNOPSIS + " TEXT NOT NULL,"
+            + COLUMN_MOVIE_RELEASE + " VARCHAR NOT NULL,"
+            + COLUMN_MOVIE_BACKDROP + " VARCHAR NOT NULL,"
+            + COLUMN_MOVIE_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
             + ")";
 
     //Query create table trailer
     private final String CREATE_TABLE_TRAILER = "CREATE TABLE " + TABLE_TRAILER_NAME + "("
-            + COLUMN_TRAILER_ID_TB + " INTEGER PRIMARY KEY,"
-            + COLUMN_TRAILER_PARENT_ID + " INTEGER,"
-            + COLUMN_TRAILER_KEY + " CHARACTER,"
-            + COLUMN_TRAILER_NAME + " VARCHAR"
+            + COLUMN_TRAILER_ID_TB + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_TRAILER_PARENT_ID + " INTEGER NOT NULL,"
+            + COLUMN_TRAILER_KEY + " CHARACTER NOT NULL,"
+            + COLUMN_TRAILER_NAME + " VARCHAR NOT NULL,"
+            + COLUMN_TRAILER_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
             + ")";
 
     //Query create table review
     private final String CREATE_TABLE_REVIEW = "CREATE TABLE " + TABLE_REVIEW_NAME + "("
-            + COLUMN_REVIEW_ID_TB + " INTEGER PRIMARY KEY,"
-            + COLUMN_REVIEW_PARENT_ID + " INTEGER,"
-            + COLUMN_REVIEW_ID + " VARCHAR,"
-            + COLUMN_REVIEW_CONTENT + " TEXT,"
-            + COLUMN_REVIEW_URL + " VARCHAR"
+            + COLUMN_REVIEW_ID_TB + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_REVIEW_PARENT_ID + " INTEGER NOT NULL,"
+            + COLUMN_REVIEW_ID + " VARCHAR NOT NULL,"
+            + COLUMN_REVIEW_CONTENT + " TEXT NOT NULL,"
+            + COLUMN_REVIEW_URL + " VARCHAR NOT NULL,"
+            + COLUMN_REVIEW_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
             + ")";
 
     public DatabaseManager(Context context) {

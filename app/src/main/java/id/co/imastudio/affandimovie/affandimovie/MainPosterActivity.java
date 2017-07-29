@@ -48,7 +48,6 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(MainPosterActivity.class.getSimpleName(), "onCreate");
         setContentView(R.layout.activity_main_poster);
         ButterKnife.bind(this);
 
@@ -63,9 +62,6 @@ public class MainPosterActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             requestDataPosterMovie();
-        } else {
-//            manager.onRestoreInstanceState(stateGridManager);
-
         }
         rcViewMain.addOnItemTouchListener(new CustomRecyclerviewItemClick(getApplicationContext(), new CustomRecyclerviewItemClick.OnItemClickListener() {
             @Override
@@ -79,8 +75,6 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.d(MainPosterActivity.class.getSimpleName(), "onSave");
-        //stateGridManager = manager.onSaveInstanceState();
         super.onSaveInstanceState(outState);
         if (dataMovieParser != null) {
             outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
@@ -90,9 +84,6 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.d(MainPosterActivity.class.getSimpleName(), "onRestrore");
-        /*if (savedInstanceState != null)
-            stateGridManager = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);*/
         if (savedInstanceState.containsKey(TAG_MOVIE_PARCEL)){
             dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
             RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
@@ -105,11 +96,6 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(MainPosterActivity.class.getSimpleName(), "onResume");
-        /* if (stateGridManager != null) {
-            manager.onRestoreInstanceState(stateGridManager);
-        }
-        rcViewMain.getLayoutManager().onRestoreInstanceState(stateGridManager);*/
     }
 
     private void setUrlRequestBaseOnSetting() {
@@ -123,7 +109,6 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(MainPosterActivity.class.getSimpleName(), "onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return true;
@@ -149,7 +134,6 @@ public class MainPosterActivity extends AppCompatActivity {
     }
 
     private void requestDataPosterMovie() {
-        Log.d(MainPosterActivity.class.getSimpleName(), "requestDataPosterMovie");
         setUrlRequestBaseOnSetting();
         if (isOnline()) {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -193,7 +177,6 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.d(MainPosterActivity.class.getSimpleName(), "onStart");
         super.onStart();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -203,7 +186,6 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        Log.d(MainPosterActivity.class.getSimpleName(), "onDestroy");
         super.onDestroy();
     }
 
@@ -216,19 +198,16 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.d(MainPosterActivity.class.getSimpleName(), "onPause");
         super.onPause();
     }
 
     @Override
     protected void onRestart() {
-        Log.d(MainPosterActivity.class.getSimpleName(), "onRestart");
         super.onRestart();
     }
 
     @Override
     protected void onStop() {
-        Log.d(MainPosterActivity.class.getSimpleName(), "onStop");
         super.onStop();
     }
 
