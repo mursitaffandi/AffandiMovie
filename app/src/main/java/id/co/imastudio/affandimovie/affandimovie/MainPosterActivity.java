@@ -44,11 +44,11 @@ public class MainPosterActivity extends AppCompatActivity {
     private String urlRequest;
     @BindView(R.id.rcView_main_poster)
     RecyclerView rcViewMain;
-    private final String TAG_MOVIE_PARCEL = "parcel_movie";
-
+    private final String TAG_MOVIE_PARCEL = "parcel";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(MainPosterActivity.class.getSimpleName(), "onCreate");
         setContentView(R.layout.activity_main_poster);
         ButterKnife.bind(this);
 
@@ -61,8 +61,11 @@ public class MainPosterActivity extends AppCompatActivity {
 
         rcViewMain.setLayoutManager(manager);
 
-        if (savedInstanceState == null || dataMovieParser == null) {
+        if (savedInstanceState == null) {
             requestDataPosterMovie();
+        } else {
+//            manager.onRestoreInstanceState(stateGridManager);
+
         }
         rcViewMain.addOnItemTouchListener(new CustomRecyclerviewItemClick(getApplicationContext(), new CustomRecyclerviewItemClick.OnItemClickListener() {
             @Override
@@ -76,24 +79,37 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.d(MainPosterActivity.class.getSimpleName(), "onSave");
+        //stateGridManager = manager.onSaveInstanceState();
         super.onSaveInstanceState(outState);
-        if (dataMovieParser != null)
+        if (dataMovieParser != null) {
             outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
-}
+        }
+    }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null && dataMovieParser != null) {
-            // Restore value of members from saved state
+        Log.d(MainPosterActivity.class.getSimpleName(), "onRestrore");
+        /*if (savedInstanceState != null)
+            stateGridManager = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);*/
+        if (savedInstanceState.containsKey(TAG_MOVIE_PARCEL)){
             dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
             RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
             rcViewMain.setAdapter(adaterItemPoster);
+        } else {
+            requestDataPosterMovie();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(MainPosterActivity.class.getSimpleName(), "onResume");
+        /* if (stateGridManager != null) {
+            manager.onRestoreInstanceState(stateGridManager);
+        }
+        rcViewMain.getLayoutManager().onRestoreInstanceState(stateGridManager);*/
     }
 
     private void setUrlRequestBaseOnSetting() {
@@ -107,6 +123,7 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(MainPosterActivity.class.getSimpleName(), "onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return true;
@@ -132,9 +149,11 @@ public class MainPosterActivity extends AppCompatActivity {
     }
 
     private void requestDataPosterMovie() {
+        Log.d(MainPosterActivity.class.getSimpleName(), "requestDataPosterMovie");
         setUrlRequestBaseOnSetting();
         if (isOnline()) {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
+
             StringRequest strRequest = new StringRequest(Request.Method.GET, urlRequest, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -161,18 +180,10 @@ public class MainPosterActivity extends AppCompatActivity {
     }
 
     private boolean isOnline() {
-        boolean mobileAndWifi = false;
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        if(cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            mobileAndWifi = true;
-        }
-        return netInfo != null && netInfo.isConnected() && mobileAndWifi;//OrConnecting();
-
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private void goToSetting() {
@@ -182,6 +193,7 @@ public class MainPosterActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        Log.d(MainPosterActivity.class.getSimpleName(), "onStart");
         super.onStart();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -191,6 +203,7 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
+        Log.d(MainPosterActivity.class.getSimpleName(), "onDestroy");
         super.onDestroy();
     }
 
@@ -200,4 +213,24 @@ public class MainPosterActivity extends AppCompatActivity {
             requestDataPosterMovie();
         }
     }
+
+    @Override
+    protected void onPause() {
+        Log.d(MainPosterActivity.class.getSimpleName(), "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(MainPosterActivity.class.getSimpleName(), "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(MainPosterActivity.class.getSimpleName(), "onStop");
+        super.onStop();
+    }
+
+
 }
