@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.adapter.trailer;
+package id.co.imastudio.affandimovie.affandimovie.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import id.co.imastudio.affandimovie.affandimovie.R;
-import id.co.imastudio.affandimovie.affandimovie.holder.trailer.HolderRecycleItemTrailer;
-import id.co.imastudio.affandimovie.affandimovie.model.trailer.DataTrailerParser;
+import id.co.imastudio.affandimovie.affandimovie.holder.HolderRecycleItemTrailer;
+import id.co.imastudio.affandimovie.affandimovie.model.DataTrailerParser;
 
 public class RecycleItemTrailer extends RecyclerView.Adapter<HolderRecycleItemTrailer> {
     private final Context context;

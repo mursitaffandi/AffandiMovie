@@ -35,11 +35,11 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import id.co.imastudio.affandimovie.affandimovie.adapter.review.RecycleItemReview;
-import id.co.imastudio.affandimovie.affandimovie.adapter.trailer.RecycleItemTrailer;
+import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemReview;
+import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemTrailer;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
-import id.co.imastudio.affandimovie.affandimovie.model.review.DataReviewParser;
-import id.co.imastudio.affandimovie.affandimovie.model.trailer.DataTrailerParser;
+import id.co.imastudio.affandimovie.affandimovie.model.DataReviewParser;
+import id.co.imastudio.affandimovie.affandimovie.model.DataTrailerParser;
 import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
 
 public class DetailMovieActivity extends AppCompatActivity {

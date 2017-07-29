@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +45,7 @@ public class MainPosterActivity extends AppCompatActivity {
     @BindView(R.id.rcView_main_poster)
     RecyclerView rcViewMain;
     private final String TAG_MOVIE_PARCEL = "parcel_movie";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,13 +61,8 @@ public class MainPosterActivity extends AppCompatActivity {
 
         rcViewMain.setLayoutManager(manager);
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null || dataMovieParser == null) {
             requestDataPosterMovie();
-        } else {
-//            manager.onRestoreInstanceState(stateGridManager);
-            dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
-            RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
-            rcViewMain.setAdapter(adaterItemPoster);
         }
         rcViewMain.addOnItemTouchListener(new CustomRecyclerviewItemClick(getApplicationContext(), new CustomRecyclerviewItemClick.OnItemClickListener() {
             @Override
@@ -80,24 +77,23 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //stateGridManager = manager.onSaveInstanceState();
-        outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
-    }
-
+        if (dataMovieParser != null)
+            outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
+}
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        /*if (savedInstanceState != null)
-            stateGridManager = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);*/
+        if (savedInstanceState != null && dataMovieParser != null) {
+            // Restore value of members from saved state
+            dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
+            RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
+            rcViewMain.setAdapter(adaterItemPoster);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /* if (stateGridManager != null) {
-            manager.onRestoreInstanceState(stateGridManager);
-        }
-        rcViewMain.getLayoutManager().onRestoreInstanceState(stateGridManager);*/
     }
 
     private void setUrlRequestBaseOnSetting() {
@@ -139,7 +135,6 @@ public class MainPosterActivity extends AppCompatActivity {
         setUrlRequestBaseOnSetting();
         if (isOnline()) {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-
             StringRequest strRequest = new StringRequest(Request.Method.GET, urlRequest, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -166,10 +161,18 @@ public class MainPosterActivity extends AppCompatActivity {
     }
 
     private boolean isOnline() {
+        boolean mobileAndWifi = false;
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+
+        if(cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            mobileAndWifi = true;
+        }
+        return netInfo != null && netInfo.isConnected() && mobileAndWifi;//OrConnecting();
+
     }
 
     private void goToSetting() {

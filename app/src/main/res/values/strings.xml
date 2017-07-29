@@ -14,13 +14,19 @@
     <string-array name="pref_example_list_titles">
         <item>Popular</item>
         <item>Top Rated</item>
+        <item>Favorite</item>
     </string-array>
     <string-array name="pref_example_list_values">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
     <string name="text_detail_description">this is description (overview)</string>
     <string name="text_detail_releasedate">YYYY-MM-DD</string>
+    <!--URI request Youtube-->
+    <string name="base_url_thumnail_yt">http://img.youtube.com/vi/</string>
+    <string name="base_url_video_yt">https://www.youtube.com/watch?v=</string>
+    <string name="size_image_yt_middle">/mqdefault.jpg</string>
     <!--URI Rest API tmdb.org-->
     <string name="url_json_popular_movie">http://api.themoviedb.org/3/movie/popular?api_key=</string>
     <string name="url_json_toprated_movie">http://api.themoviedb.org/3/movie/top_rated?api_key=</string>
@@ -29,9 +35,6 @@
     <string name="base_url_detail">http://api.themoviedb.org/3/movie/</string>
     <string name="tail_url_trailer">/videos?api_key=</string>
     <string name="tail_url_review">/reviews?api_key=</string>
-    <string name="base_url_thumnail_yt">http://img.youtube.com/vi/</string>
-    <string name="base_url_video_yt">https://www.youtube.com/watch?v=</string>
-    <string name="size_image_yt_middle">/mqdefault.jpg</string>
     <!--size_poster_image_-->
     <string name="size_poster_image_w92">w92/</string>
     <string name="size_poster_image_w154">w154/</string>

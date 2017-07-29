@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.adapter.review;
+package id.co.imastudio.affandimovie.affandimovie.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import id.co.imastudio.affandimovie.affandimovie.R;
-import id.co.imastudio.affandimovie.affandimovie.holder.HolderRecycleMainPoster;
-import id.co.imastudio.affandimovie.affandimovie.holder.review.HolderRecycleItemReview;
-import id.co.imastudio.affandimovie.affandimovie.holder.trailer.HolderRecycleItemTrailer;
-import id.co.imastudio.affandimovie.affandimovie.model.review.DataReviewParser;
+import id.co.imastudio.affandimovie.affandimovie.holder.HolderRecycleItemReview;
+import id.co.imastudio.affandimovie.affandimovie.model.DataReviewParser;
 
 
 public class RecycleItemReview extends RecyclerView.Adapter<HolderRecycleItemReview> {

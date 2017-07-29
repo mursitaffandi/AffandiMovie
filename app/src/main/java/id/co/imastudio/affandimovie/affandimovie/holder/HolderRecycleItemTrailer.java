@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.holder.trailer;
+package id.co.imastudio.affandimovie.affandimovie.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

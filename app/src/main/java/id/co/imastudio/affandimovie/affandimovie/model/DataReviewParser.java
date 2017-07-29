@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.model.review;
+package id.co.imastudio.affandimovie.affandimovie.model;
 
 import java.util.List;
 import android.os.Parcel;
