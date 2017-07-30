@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import id.co.imastudio.affandimovie.affandimovie.R;
+import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
 import id.co.imastudio.affandimovie.affandimovie.holder.HolderRecycleItemTrailer;
 import id.co.imastudio.affandimovie.affandimovie.model.DataTrailerParser;
 
@@ -34,11 +35,11 @@ public class RecycleItemTrailer extends RecyclerView.Adapter<HolderRecycleItemTr
         Picasso
                 .with(context)
                 .load(
-                        context.getResources().getString(R.string.base_url_thumnail_yt)
+                        ConfigUri.BASE_URL_THUMNAIL_YT
                                 + listItemTrailer.get(position).getKey()
-                                + context.getResources().getString(R.string.size_image_yt_middle)
+                                + ConfigUri.SIZE_IMAGE_YT_MIDDLE
                 )
-                .placeholder(R.drawable.image_sampel)
+                .placeholder(R.drawable.placeholder)
                 .into(holder.ivThumnailTrailer);
     }
 

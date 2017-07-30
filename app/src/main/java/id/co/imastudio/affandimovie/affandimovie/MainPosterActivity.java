@@ -1,11 +1,14 @@
 package id.co.imastudio.affandimovie.affandimovie;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,19 +35,29 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemMainPoster;
+import id.co.imastudio.affandimovie.affandimovie.adapter.favorite.ItemMovieAdapter;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
+import id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.model.MessageEvent;
+import id.co.imastudio.affandimovie.affandimovie.model.dbItem.Movie;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
+public class MainPosterActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
-public class MainPosterActivity extends AppCompatActivity {
     private DataMovieParser dataMovieParser;
     private String urlRequest;
     @BindView(R.id.rcView_main_poster)
     RecyclerView rcViewMain;
     private final String TAG_MOVIE_PARCEL = "parcel";
+
+    private static final int CURSOR_LOADER_ID = 0;
+    private ItemMovieAdapter mItemMovieAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +72,11 @@ public class MainPosterActivity extends AppCompatActivity {
             manager.setSpanCount(3);
 
         rcViewMain.setLayoutManager(manager);
+/*
+* Experiment sqlite -> contentResolver -> content provider
+* */
+        mItemMovieAdapter = new ItemMovieAdapter(this);
+        getSupportLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
         if (savedInstanceState == null) {
             requestDataPosterMovie();
@@ -84,7 +102,7 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.containsKey(TAG_MOVIE_PARCEL)){
+        if (savedInstanceState.containsKey(TAG_MOVIE_PARCEL)) {
             dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
             RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
             rcViewMain.setAdapter(adaterItemPoster);
@@ -96,6 +114,7 @@ public class MainPosterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getSupportLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 
     private void setUrlRequestBaseOnSetting() {
@@ -212,4 +231,61 @@ public class MainPosterActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Cursor>(this) {
+            Cursor mTaskData = null;
+            @Override
+            public Cursor loadInBackground() {
+                return null;
+            }
+
+            @Override
+            protected void onStartLoading() {
+                if (mTaskData != null) {
+                    deliverResult(mTaskData);
+                    Log.d("M_onStartLoading", "start load data.");
+
+                }
+                else {
+                    forceLoad();
+                    Log.d("M_onStartLoading", "Forece load data.");
+                }
+            }
+
+            @Override
+            protected Cursor onLoadInBackground() {
+                try {
+                    return getContentResolver()
+                            .query(
+                                    BaseMovie.MovieListEntry.CONTENT_URI,
+                                    null,
+                                    null,
+                                    null,
+                                    BaseMovie.MovieListEntry.COLUMN_MOVIE_TITLE
+                            );
+                }catch (Exception e){
+                    Log.e("M_onLoadInBackground", "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public void deliverResult(Cursor data) {
+                mTaskData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mItemMovieAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mItemMovieAdapter.swapCursor(null);
+    }
 }

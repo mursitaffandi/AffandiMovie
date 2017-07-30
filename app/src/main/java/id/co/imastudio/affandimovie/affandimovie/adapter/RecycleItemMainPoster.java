@@ -11,20 +11,18 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import id.co.imastudio.affandimovie.affandimovie.R;
+import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
+import id.co.imastudio.affandimovie.affandimovie.global.MyApplication;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.holder.HolderRecycleMainPoster;
 
 public class RecycleItemMainPoster extends RecyclerView.Adapter<HolderRecycleMainPoster> {
     private final Context context;
     private final List<DataMovieParser.Result> listItemMovie;
-    private final String url_image;
-    private final String sizeImage;
 
     public RecycleItemMainPoster(Context context, List<DataMovieParser.Result> listItemMovie) {
         this.context = context;
         this.listItemMovie = listItemMovie;
-        url_image = context.getResources().getString(R.string.base_url_image);
-        sizeImage = context.getResources().getString(R.string.size_poster_image_recommended);
     }
 
     @Override
@@ -39,11 +37,11 @@ public class RecycleItemMainPoster extends RecyclerView.Adapter<HolderRecycleMai
         Picasso
                 .with(context)
                 .load(
-                        url_image
-                                + sizeImage
+                        ConfigUri.BASE_URL_IMAGE
+                                + ConfigUri.SIZE_POSTER_IMAGE_RECOMMENDED
                                 + listItemMovie.get(position).getPosterPath()
                 )
-                .placeholder(R.drawable.image_sampel)
+                .placeholder(R.drawable.placeholder)
                 .into(holder.imgVPoster);
 
     }

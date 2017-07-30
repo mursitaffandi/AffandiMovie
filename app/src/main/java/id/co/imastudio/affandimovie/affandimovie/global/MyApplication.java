@@ -1,13 +1,15 @@
-package id.co.imastudio.affandimovie.affandimovie;
+package id.co.imastudio.affandimovie.affandimovie.global;
 
 import android.app.Application;
-
+import android.content.Context;
 import com.facebook.stetho.Stetho;
 
-
 public class MyApplication extends Application {
+    private static Context mContext;
+    @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         Stetho.initializeWithDefaults(this);
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
@@ -16,5 +18,9 @@ public class MyApplication extends Application {
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
+    }
+
+    public static Context getContext(){
+        return mContext;
     }
 }

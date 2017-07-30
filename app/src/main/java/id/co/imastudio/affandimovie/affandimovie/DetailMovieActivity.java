@@ -37,9 +37,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemReview;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemTrailer;
+import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.model.DataReviewParser;
 import id.co.imastudio.affandimovie.affandimovie.model.DataTrailerParser;
+import id.co.imastudio.affandimovie.affandimovie.model.dbItem.Movie;
 import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
 
 public class DetailMovieActivity extends AppCompatActivity {
@@ -57,6 +59,8 @@ public class DetailMovieActivity extends AppCompatActivity {
     ImageView ivheaderBackdrop;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.btnSaveFavorite)
+    ImageView btnFavorite;
 
     @BindView(R.id.rcV_detail_trailer)
     RecyclerView rvTrailer;
@@ -67,6 +71,7 @@ public class DetailMovieActivity extends AppCompatActivity {
     TextView tvNotFoundReview;
 
     private DataMovieParser.Result dataMoviewParcel;
+    private Movie dataMovieDB;
     private DataTrailerParser dataTrailerParcel;
     private DataReviewParser dataReviewParcel;
 
@@ -74,6 +79,8 @@ public class DetailMovieActivity extends AppCompatActivity {
     private String urlRequestReview;
     private String sharedTrailerUrl = null;
     private String sharedTrailerTitle;
+    private static boolean sIsFavorite = false;
+    private static boolean sAvailableDB = false;
 
     LinearLayoutManager verticalLayoutManager;
     GsonBuilder gsonBuilder;
@@ -90,24 +97,38 @@ public class DetailMovieActivity extends AppCompatActivity {
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
 
-        urlRequestTrailer = this.getResources().getString(R.string.base_url_detail)
-                + String.valueOf(dataMoviewParcel.getId())
-                + this.getResources().getString(R.string.tail_url_trailer)
-                + this.getResources().getString(R.string.MY_TMDB_API_KEY);
+        if (savedInstanceState == null) {
+            if (sIsFavorite) {
+                btnFavorite.setImageResource(R.drawable.fav_add);
+                sAvailableDB = true;
+            } else {
+                btnFavorite.setImageResource(R.drawable.fav_remove);
+                sAvailableDB = false;
+            }
+        }
 
-        urlRequestReview = this.getResources().getString(R.string.base_url_detail)
+        urlRequestTrailer = ConfigUri.BASE_URL_DETAIL
                 + String.valueOf(dataMoviewParcel.getId())
-                + this.getResources().getString(R.string.tail_url_review)
-                + this.getResources().getString(R.string.MY_TMDB_API_KEY);
+                + ConfigUri.TAIL_URL_TRAILER
+                + ConfigUri.MY_TMDB_API_KEY;
+
+        urlRequestReview = ConfigUri.BASE_URL_DETAIL
+                + String.valueOf(dataMoviewParcel.getId())
+                + ConfigUri.TAIL_URL_REVIEW
+                + ConfigUri.MY_TMDB_API_KEY;
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("");
             Picasso.with(this)
-                    .load(this.getResources().getString(R.string.base_url_image) + this.getResources().getString(R.string.size_poster_image_w342) + dataMoviewParcel.getBackdropPath())
-                    .placeholder(R.drawable.image_sampel)
+                    .load(
+                            ConfigUri.BASE_URL_IMAGE
+                                    + ConfigUri.SIZE_POSTER_IMAGE_W342
+                                    + dataMoviewParcel.getBackdropPath())
+                    .placeholder(R.drawable.placeholder)
                     .into(ivheaderBackdrop);
         }
+
         collapsingToolbarLayout.setTitle(dataMoviewParcel.getOriginalTitle());
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
@@ -115,9 +136,13 @@ public class DetailMovieActivity extends AppCompatActivity {
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBarPlus1);
 
         Picasso.with(this)
-                .load(this.getResources().getString(R.string.base_url_image) + this.getResources().getString(R.string.size_poster_image_w342) + dataMoviewParcel.getPosterPath())
-                .placeholder(R.drawable.image_sampel)
+                .load(
+                        ConfigUri.BASE_URL_IMAGE
+                                + ConfigUri.SIZE_POSTER_IMAGE_W342
+                                + dataMoviewParcel.getPosterPath())
+                .placeholder(R.drawable.placeholder)
                 .into(ivmoviePoster);
+
         tvsynopsis.setText(dataMoviewParcel.getOverview());
         tvuserRating.setText(String.valueOf(dataMoviewParcel.getVoteAverage()));
         tvreleaseDate.setText(dataMoviewParcel.getReleaseDate());
@@ -136,9 +161,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                         new Intent(
                                 Intent.ACTION_VIEW
                                 , Uri.parse(
-                                getApplicationContext()
-                                        .getResources()
-                                        .getString(R.string.base_url_video_yt)
+                                ConfigUri.BASE_URL_VIDEO_YT
                                         + dataTrailerParcel.results.get(position).getKey()
                         )));
             }
@@ -146,8 +169,14 @@ public class DetailMovieActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnSaveFavorite)
-    void onClick(Button btnSaveFavorite) {
-
+    void onClick(ImageView btnSaveFavorite) {
+        if (sIsFavorite) {
+            btnSaveFavorite.setImageResource(R.drawable.fav_remove);
+            sIsFavorite = false;
+        }else {
+            btnSaveFavorite.setImageResource(R.drawable.fav_add);
+            sIsFavorite = true;
+        }
     }
 
     @Override
@@ -188,8 +217,8 @@ public class DetailMovieActivity extends AppCompatActivity {
                     RecycleItemTrailer adaterItemTrailer = new RecycleItemTrailer(getApplicationContext(), dataTrailerParcel.results);
                     rvTrailer.setAdapter(adaterItemTrailer);
                     adaterItemTrailer.notifyDataSetChanged();
-                    sharedTrailerUrl = getApplicationContext().getResources().getString(R.string.base_url_video_yt) + dataTrailerParcel.results.get(0).getKey();
-                    Log.d("json_trailer " + dataTrailerParcel.getId().toString(), response);
+                    sharedTrailerUrl =
+                            ConfigUri.BASE_URL_VIDEO_YT + dataTrailerParcel.results.get(0).getKey();
                 }
             }, new Response.ErrorListener() {
                 @Override

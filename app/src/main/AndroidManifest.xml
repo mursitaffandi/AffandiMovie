@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".MyApplication"
+        android:name=".global.MyApplication"
         android:icon="@mipmap/ic_launcher_affandi_movie"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_r"
@@ -35,6 +35,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="id.co.imastudio.affandimovie.affandimovie.MainPosterActivity" />
         </activity>
+
+        <provider
+            android:name="id.co.imastudio.affandimovie.affandimovie.provider.MoviesProvider"
+            android:authorities="id.co.imastudio.affandimovie.affandimovie"
+            android:exported="false"
+            />
     </application>
 
 </manifest>
