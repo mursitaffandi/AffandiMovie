@@ -51,39 +51,39 @@ import static id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovi
 
 public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
-    private
+
     Toolbar toolbar;
     @BindView(R.id.tvSynopsis)
-    private
+
     TextView tvsynopsis;
     @BindView(R.id.tvRate)
-    private
+
     TextView tvuserRating;
     @BindView(R.id.tvReleaseDate)
-    private
+
     TextView tvreleaseDate;
     @BindView(R.id.ivPosterDetail)
-    private
+
     ImageView ivmoviePoster;
     @BindView(R.id.iv_detail_header_parallax)
-    private
+
     ImageView ivheaderBackdrop;
     @BindView(R.id.toolbar_layout)
-    private
+
     CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.btnSaveFavorite)
-    private
+
     ImageView btnFavorite;
 
     @BindView(R.id.rcV_detail_trailer)
-    private
+
     RecyclerView rvTrailer;
     @BindView(R.id.rcV_detail_review)
-    private
+
     RecyclerView rvReview;
 
     @BindView(R.id.tvdetailnoReviewView)
-    private
+
     TextView tvNotFoundReview;
 
     private DataTrailerParser dataTrailerParcel;
@@ -231,19 +231,14 @@ public class DetailMovieActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_item_detail_share:
                 String textShare = "";
-                if (urlRequestTrailer != null)
-                    textShare = sharedTrailerTitle + "/n" + sharedTrailerUrl;
-
-                ShareCompat.IntentBuilder
-                        .from(this)
-                        .setType("text/plain")
-                        .setChooserTitle("share to:")
-                        .setText("Watch" + "/n" + textShare)
-                        .startChooser();
 
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Watch " + sharedTrailerTitle);
+                if (urlRequestTrailer != null) {
+                        textShare = sharedTrailerTitle + " " + sharedTrailerUrl;
+                        sharingIntent.putExtra(Intent.EXTRA_TEXT, textShare);
+                }
                 startActivity(sharingIntent);
                 return true;
             default:

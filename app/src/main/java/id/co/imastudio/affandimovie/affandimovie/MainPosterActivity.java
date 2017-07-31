@@ -53,7 +53,7 @@ public class MainPosterActivity extends AppCompatActivity implements
     private DataMovieParser dataMovieParser;
     private String urlRequest;
     @BindView(R.id.rcView_main_poster)
-    private
+
     RecyclerView rcViewMain;
     private final String TAG_MOVIE_PARCEL = "parcel";
 
