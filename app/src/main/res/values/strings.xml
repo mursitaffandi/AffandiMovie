@@ -30,7 +30,7 @@
     <!--URI Rest API tmdb.org-->
     <string name="url_json_popular_movie">http://api.themoviedb.org/3/movie/popular?api_key=</string>
     <string name="url_json_toprated_movie">http://api.themoviedb.org/3/movie/top_rated?api_key=</string>
-    <string name="MY_TMDB_API_KEY"><!--put here your tmdb API KEY--></string>
+    <string name="MY_TMDB_API_KEY"><!--put here your tmdb API KEY-->fd9bd886122bf38660b918a3cccc2f7f</string>
     <string name="base_url_image">http://image.tmdb.org/t/p/</string>
     <string name="base_url_detail">http://api.themoviedb.org/3/movie/</string>
     <string name="tail_url_trailer">/videos?api_key=</string>
@@ -46,6 +46,8 @@
     <string name="size_poster_image_recommended">w185/</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
 
-    <string name="content_provider">id.co.imastudio.affandimovie.affandimovie.provider.MoviesProvider</string>
-    <string name="authority">id.co.imastudio.affandimovie.affandimovie</string>
+    <string name="btnSaveFavorite">butto save</string>
+    <string name="tvTrailer">Trailer</string>
+    <string name="tvReview">Review</string>
+    <string name="tvdetailnoReviewView">No Review Available</string>
 </resources>

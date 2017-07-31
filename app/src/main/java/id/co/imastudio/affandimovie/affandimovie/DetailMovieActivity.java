@@ -3,6 +3,7 @@ package id.co.imastudio.affandimovie.affandimovie;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,8 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,11 +41,13 @@ import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemReview;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemTrailer;
 import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
 import id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie;
-import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.model.DataReviewParser;
 import id.co.imastudio.affandimovie.affandimovie.model.DataTrailerParser;
 import id.co.imastudio.affandimovie.affandimovie.model.dbItem.Movie;
 import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
+
+import static id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie.MovieListEntry.COLUMN_MOVIE_ID;
+import static id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie.MovieListEntry.CONTENT_URI;
 
 public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
@@ -99,14 +100,14 @@ public class DetailMovieActivity extends AppCompatActivity {
         dataMovieDB = getIntent().getParcelableExtra("parcel");
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
-
+        sAvailableDB = checkAvalableMovie(String.valueOf(dataMovieDB.getMovie_id()));
         if (savedInstanceState == null) {
-            if (sIsFavorite) {
-                btnFavorite.setImageResource(R.drawable.fav_add);
-                sAvailableDB = true;
+            if (sAvailableDB) {
+                btnFavorite.setImageResource(R.drawable.fav_added);
+                sIsFavorite = true;
             } else {
-                btnFavorite.setImageResource(R.drawable.fav_remove);
-                sAvailableDB = false;
+                btnFavorite.setImageResource(R.drawable.fav_unavailabled);
+                sIsFavorite = false;
             }
         }
 
@@ -173,9 +174,8 @@ public class DetailMovieActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sIsFavorite) {
-                    onClickAddTask();
-                }
+                if (sIsFavorite && !sAvailableDB) onClickAddTask();
+                if (!sIsFavorite && sAvailableDB) onClickRemoveTask();
                 finish();
             }
         });
@@ -184,10 +184,10 @@ public class DetailMovieActivity extends AppCompatActivity {
     @OnClick(R.id.btnSaveFavorite)
     void onClick(ImageView btnSaveFavorite) {
         if (sIsFavorite) {
-            btnSaveFavorite.setImageResource(R.drawable.fav_remove);
+            btnSaveFavorite.setImageResource(R.drawable.fav_unavailabled);
             sIsFavorite = false;
         } else {
-            btnSaveFavorite.setImageResource(R.drawable.fav_add);
+            btnSaveFavorite.setImageResource(R.drawable.fav_added);
             sIsFavorite = true;
         }
     }
@@ -203,8 +203,8 @@ public class DetailMovieActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey("favorite")) {
             sIsFavorite = savedInstanceState.getBoolean("favorite");
-            if (sIsFavorite) btnFavorite.setImageResource(R.drawable.fav_add);
-            else btnFavorite.setImageResource(R.drawable.fav_remove);
+            if (sIsFavorite) btnFavorite.setImageResource(R.drawable.fav_added);
+            else btnFavorite.setImageResource(R.drawable.fav_unavailabled);
         }
     }
 
@@ -296,25 +296,44 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (sAvailableDB) Log.d("onDestroy", "true sAvailableDB ->"+dataMovieDB.getMovie_title());
+        if (!sAvailableDB) Log.d("onDestroy", "false sAvailableDB ->"+dataMovieDB.getMovie_title());
+        if (sIsFavorite) Log.d("onDestroy", "true sIsFavorite ->"+dataMovieDB.getMovie_title());
+        if (!sIsFavorite) Log.d("onDestroy", "false sIsFavorite ->"+dataMovieDB.getMovie_title());
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
-        if (sIsFavorite) {
-            onClickAddTask();
-        }
+        if (sIsFavorite && !sAvailableDB) onClickAddTask();
+        if (!sIsFavorite && sAvailableDB) onClickRemoveTask();
         super.onBackPressed();
     }
 
+    private boolean checkAvalableMovie(String movie_id) {
+        String[] mProjection = new String[]{COLUMN_MOVIE_ID};
+        String mSelection = COLUMN_MOVIE_ID + "= ?";
+        String[] mSelectionArgs = new String[]{movie_id};
+
+        Cursor cursor = getContentResolver().query(CONTENT_URI,
+                mProjection,
+                mSelection,
+                mSelectionArgs,
+                null);
+        boolean avalableResult = cursor.getCount() > 0;
+        cursor.close();
+        return avalableResult;
+    }
+
     private void onClickRemoveTask() {
-        Uri uri = BaseMovie.MovieListEntry.CONTENT_URI;
+        Uri uri = CONTENT_URI;
         uri = uri.buildUpon().appendPath(String.valueOf(dataMovieDB.getMovie_id())).build();
         getContentResolver().delete(uri, null, null);
         if (uri != null) {
             Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+            Log.d("onClickRemoveTask", "delete if");
         } else {
-            Log.d("onClickRemoveTask", "delete success");
+            Log.d("onClickRemoveTask", "delete else");
         }
     }
 
@@ -328,7 +347,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_RELEASE, dataMovieDB.getMovie_release_date());
         contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_BACKDROP, dataMovieDB.getMovie_backdrop_path());
 
-        Uri uri = getContentResolver().insert(BaseMovie.MovieListEntry.CONTENT_URI, contentValues);
+        Uri uri = getContentResolver().insert(CONTENT_URI, contentValues);
 
         if (uri != null) {
             Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();

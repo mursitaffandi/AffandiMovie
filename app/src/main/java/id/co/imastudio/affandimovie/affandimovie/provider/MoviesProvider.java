@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -24,7 +25,6 @@ public class MoviesProvider extends ContentProvider {
     // Codes for the UriMatcher //////
     private static final int MOVIE = 100;
     private static final int MOVIE_WITH_ID = 101;
-    ////////
 
     private static UriMatcher buildUriMatcher(){
         // Build a UriMatcher by adding a specific code to return based on a match
@@ -142,70 +142,20 @@ public class MoviesProvider extends ContentProvider {
                 numDeleted = db.delete(
                         BaseMovie.MovieListEntry.TABLE_MOVIE_NAME, selection, selectionArgs);
                 // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
+                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE movie_id = '" +
                         BaseMovie.MovieListEntry.TABLE_MOVIE_NAME + "'");
                 break;
             case MOVIE_WITH_ID:
                 // Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
                 // Use selections/selectionArgs to filter for this ID
-                numDeleted = db.delete(BaseMovie.MovieListEntry.TABLE_MOVIE_NAME, "_id=?", new String[]{id});
+                numDeleted = db.delete(BaseMovie.MovieListEntry.TABLE_MOVIE_NAME, "movie_id=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         return numDeleted;
-    }
-
-    @Override
-    public int bulkInsert(Uri uri, ContentValues[] values){
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        final int match = sUriMatcher.match(uri);
-        switch(match){
-            case MOVIE:
-                // allows for multiple transactions
-                db.beginTransaction();
-
-                // keep track of successful inserts
-                int numInserted = 0;
-                try{
-                    for(ContentValues value : values){
-                        if (value == null){
-                            throw new IllegalArgumentException("Cannot have null content values");
-                        }
-                        long _id = -1;
-                        try{
-                            _id = db.insertOrThrow(BaseMovie.MovieListEntry.TABLE_MOVIE_NAME,
-                                    null, value);
-                        }catch(SQLiteConstraintException e) {
-                            Log.w(getClass().getSimpleName(), "Attempting to insert " +
-                                    value.getAsString(
-                                            BaseMovie.MovieListEntry.COLUMN_MOVIE_TITLE)
-                                    + " but value is already in database.");
-                        }
-                        if (_id != -1){
-                            numInserted++;
-                        }
-                    }
-                    if(numInserted > 0){
-                        // If no errors, declare a successful transaction.
-                        // database will not populate if this is not called
-                        db.setTransactionSuccessful();
-                    }
-                } finally {
-                    // all transactions occur at once
-                    db.endTransaction();
-                }
-                if (numInserted > 0){
-                    // if there was successful insertion, notify the content resolver that there
-                    // was a change
-                    getContext().getContentResolver().notifyChange(uri, null);
-                }
-                return numInserted;
-            default:
-                return super.bulkInsert(uri, values);
-        }
     }
 
     @Override
@@ -243,5 +193,4 @@ public class MoviesProvider extends ContentProvider {
 
         return numUpdated;
     }
-
 }
