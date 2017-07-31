@@ -25,7 +25,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             + BaseMovie.MovieListEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_MOVIE_ID + " INTEGER NOT NULL,"
             + COLUMN_MOVIE_RATE + " CHARACTER NOT NULL,"
-            + COLUMN_MOVIE_TITLE + "VARCHAR NOT NULL,"
+            + COLUMN_MOVIE_TITLE + " VARCHAR NOT NULL,"
             + COLUMN_MOVIE_POSTER + " VARCHAR NOT NULL,"
             + COLUMN_MOVIE_SYNOPSIS + " TEXT NOT NULL,"
             + COLUMN_MOVIE_RELEASE + " VARCHAR NOT NULL,"

@@ -1,5 +1,6 @@
 package id.co.imastudio.affandimovie.affandimovie;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -7,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +41,7 @@ import butterknife.OnClick;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemReview;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemTrailer;
 import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
+import id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.model.DataReviewParser;
 import id.co.imastudio.affandimovie.affandimovie.model.DataTrailerParser;
@@ -70,10 +74,9 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.tvdetailnoReviewView)
     TextView tvNotFoundReview;
 
-    private DataMovieParser.Result dataMoviewParcel;
-    private Movie dataMovieDB;
     private DataTrailerParser dataTrailerParcel;
     private DataReviewParser dataReviewParcel;
+    private Movie dataMovieDB;
 
     private String urlRequestTrailer;
     private String urlRequestReview;
@@ -93,7 +96,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        dataMoviewParcel = getIntent().getParcelableExtra("parcel");
+        dataMovieDB = getIntent().getParcelableExtra("parcel");
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
 
@@ -108,12 +111,12 @@ public class DetailMovieActivity extends AppCompatActivity {
         }
 
         urlRequestTrailer = ConfigUri.BASE_URL_DETAIL
-                + String.valueOf(dataMoviewParcel.getId())
+                + String.valueOf(dataMovieDB.getMovie_id())
                 + ConfigUri.TAIL_URL_TRAILER
                 + ConfigUri.MY_TMDB_API_KEY;
 
         urlRequestReview = ConfigUri.BASE_URL_DETAIL
-                + String.valueOf(dataMoviewParcel.getId())
+                + String.valueOf(dataMovieDB.getMovie_id())
                 + ConfigUri.TAIL_URL_REVIEW
                 + ConfigUri.MY_TMDB_API_KEY;
 
@@ -124,12 +127,13 @@ public class DetailMovieActivity extends AppCompatActivity {
                     .load(
                             ConfigUri.BASE_URL_IMAGE
                                     + ConfigUri.SIZE_POSTER_IMAGE_W342
-                                    + dataMoviewParcel.getBackdropPath())
+                                    + dataMovieDB.getMovie_backdrop_path())
                     .placeholder(R.drawable.placeholder)
                     .into(ivheaderBackdrop);
         }
+        sharedTrailerTitle = dataMovieDB.getMovie_title();
 
-        collapsingToolbarLayout.setTitle(dataMoviewParcel.getOriginalTitle());
+        collapsingToolbarLayout.setTitle(sharedTrailerTitle);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBarPlus1);
@@ -139,14 +143,13 @@ public class DetailMovieActivity extends AppCompatActivity {
                 .load(
                         ConfigUri.BASE_URL_IMAGE
                                 + ConfigUri.SIZE_POSTER_IMAGE_W342
-                                + dataMoviewParcel.getPosterPath())
+                                + dataMovieDB.getMovie_poster_path())
                 .placeholder(R.drawable.placeholder)
                 .into(ivmoviePoster);
 
-        tvsynopsis.setText(dataMoviewParcel.getOverview());
-        tvuserRating.setText(String.valueOf(dataMoviewParcel.getVoteAverage()));
-        tvreleaseDate.setText(dataMoviewParcel.getReleaseDate());
-        sharedTrailerTitle = dataMoviewParcel.getOriginalTitle();
+        tvsynopsis.setText(dataMovieDB.getMovie_overview());
+        tvuserRating.setText(dataMovieDB.getMovie_rate());
+        tvreleaseDate.setText(dataMovieDB.getMovie_release_date());
 
         verticalLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvTrailer.setLayoutManager(verticalLayoutManager);
@@ -166,6 +169,16 @@ public class DetailMovieActivity extends AppCompatActivity {
                         )));
             }
         }));
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sIsFavorite) {
+                    onClickAddTask();
+                }
+                finish();
+            }
+        });
     }
 
     @OnClick(R.id.btnSaveFavorite)
@@ -173,9 +186,25 @@ public class DetailMovieActivity extends AppCompatActivity {
         if (sIsFavorite) {
             btnSaveFavorite.setImageResource(R.drawable.fav_remove);
             sIsFavorite = false;
-        }else {
+        } else {
             btnSaveFavorite.setImageResource(R.drawable.fav_add);
             sIsFavorite = true;
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("favorite", sIsFavorite);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("favorite")) {
+            sIsFavorite = savedInstanceState.getBoolean("favorite");
+            if (sIsFavorite) btnFavorite.setImageResource(R.drawable.fav_add);
+            else btnFavorite.setImageResource(R.drawable.fav_remove);
         }
     }
 
@@ -188,18 +217,22 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.menu_item_detail_share:
+                String textShare = "";
+                if (urlRequestTrailer != null)
+                    textShare = sharedTrailerTitle + "/n" + sharedTrailerUrl;
+
+                ShareCompat.IntentBuilder
+                        .from(this)
+                        .setType("text/plain")
+                        .setChooserTitle("share to:")
+                        .setText("Watch" + "/n" + textShare)
+                        .startChooser();
+
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Watch " + sharedTrailerTitle);
-                if (urlRequestTrailer != null)
-                    sharingIntent.putExtra(Intent.EXTRA_TEXT, sharedTrailerTitle + " " + sharedTrailerUrl);
                 startActivity(sharingIntent);
                 return true;
             default:
@@ -242,7 +275,6 @@ public class DetailMovieActivity extends AppCompatActivity {
                         rvReview.setAdapter(adaterItemReview);
                         adaterItemReview.notifyDataSetChanged();
                     } else tvNotFoundReview.setVisibility(View.VISIBLE);
-                    Log.d("json_review " + dataReviewParcel.getId().toString(), response);
 
                 }
             }, new Response.ErrorListener() {
@@ -260,5 +292,48 @@ public class DetailMovieActivity extends AppCompatActivity {
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (sIsFavorite) {
+            onClickAddTask();
+        }
+        super.onBackPressed();
+    }
+
+    private void onClickRemoveTask() {
+        Uri uri = BaseMovie.MovieListEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(String.valueOf(dataMovieDB.getMovie_id())).build();
+        getContentResolver().delete(uri, null, null);
+        if (uri != null) {
+            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("onClickRemoveTask", "delete success");
+        }
+    }
+
+    private void onClickAddTask() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_ID, dataMovieDB.getMovie_id());
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_RATE, dataMovieDB.getMovie_rate());
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_TITLE, dataMovieDB.getMovie_title());
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_POSTER, dataMovieDB.getMovie_poster_path());
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_SYNOPSIS, dataMovieDB.getMovie_overview());
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_RELEASE, dataMovieDB.getMovie_release_date());
+        contentValues.put(BaseMovie.MovieListEntry.COLUMN_MOVIE_BACKDROP, dataMovieDB.getMovie_backdrop_path());
+
+        Uri uri = getContentResolver().insert(BaseMovie.MovieListEntry.CONTENT_URI, contentValues);
+
+        if (uri != null) {
+            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("onClickAddTask", "insert success");
+        }
     }
 }

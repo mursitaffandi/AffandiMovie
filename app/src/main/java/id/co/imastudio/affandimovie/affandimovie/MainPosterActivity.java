@@ -1,6 +1,5 @@
 package id.co.imastudio.affandimovie.affandimovie;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -36,15 +35,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.co.imastudio.affandimovie.affandimovie.adapter.RecycleItemMainPoster;
 import id.co.imastudio.affandimovie.affandimovie.adapter.favorite.ItemMovieAdapter;
+import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
 import id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
-import id.co.imastudio.affandimovie.affandimovie.model.MessageEvent;
 import id.co.imastudio.affandimovie.affandimovie.model.dbItem.Movie;
+import id.co.imastudio.affandimovie.affandimovie.util.MessageEvent;
 import id.co.imastudio.affandimovie.affandimovie.setting.SettingsActivity;
 import id.co.imastudio.affandimovie.affandimovie.util.CustomRecyclerviewItemClick;
+
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 public class MainPosterActivity extends AppCompatActivity implements
@@ -58,6 +58,7 @@ public class MainPosterActivity extends AppCompatActivity implements
 
     private static final int CURSOR_LOADER_ID = 0;
     private ItemMovieAdapter mItemMovieAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,22 +71,23 @@ public class MainPosterActivity extends AppCompatActivity implements
             manager.setSpanCount(2);
         else
             manager.setSpanCount(3);
-
         rcViewMain.setLayoutManager(manager);
-/*
-* Experiment sqlite -> contentResolver -> content provider
-* */
-        mItemMovieAdapter = new ItemMovieAdapter(this);
-        getSupportLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
         if (savedInstanceState == null) {
             requestDataPosterMovie();
         }
+
         rcViewMain.addOnItemTouchListener(new CustomRecyclerviewItemClick(getApplicationContext(), new CustomRecyclerviewItemClick.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Movie sendtoDetail;
                 Intent toDetail = new Intent(view.getContext(), DetailMovieActivity.class);
-                toDetail.putExtra("parcel", dataMovieParser.results.get(position));
+                if (PreferenceSettingOrder.STATE_ORDER != 2) {
+                    sendtoDetail = new Movie(dataMovieParser.results.get(position));
+                }
+                else sendtoDetail = mItemMovieAdapter.slistMovie.get(position);
+
+                toDetail.putExtra("parcel", sendtoDetail);
                 view.getContext().startActivity(toDetail);
             }
         }));
@@ -94,15 +96,17 @@ public class MainPosterActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (dataMovieParser != null) {
-            outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
+        if (PreferenceSettingOrder.STATE_ORDER != 2) {
+            if (dataMovieParser != null) {
+                outState.putParcelable(TAG_MOVIE_PARCEL, dataMovieParser);
+            }
         }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.containsKey(TAG_MOVIE_PARCEL)) {
+        if (savedInstanceState.containsKey(TAG_MOVIE_PARCEL) && PreferenceSettingOrder.STATE_ORDER != 2) {
             dataMovieParser = savedInstanceState.getParcelable(TAG_MOVIE_PARCEL);
             RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
             rcViewMain.setAdapter(adaterItemPoster);
@@ -114,16 +118,25 @@ public class MainPosterActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+        if (PreferenceSettingOrder.STATE_ORDER == 2){
+            getSupportLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+        }
     }
 
     private void setUrlRequestBaseOnSetting() {
-        urlRequest =
-                (PreferenceSettingOrder.STATE_ORDER == 0)
-                        ? getResources().getString(R.string.url_json_popular_movie)
-                        + getResources().getString(R.string.MY_TMDB_API_KEY)
-                        : getResources().getString(R.string.url_json_toprated_movie)
-                        + getResources().getString(R.string.MY_TMDB_API_KEY);
+        switch (PreferenceSettingOrder.STATE_ORDER) {
+            case 0:
+                urlRequest = ConfigUri.URL_JSON_POPULAR_MOVIE + ConfigUri.MY_TMDB_API_KEY;
+                break;
+            case 1:
+                urlRequest = ConfigUri.URL_JSON_TOPRATED_MOVIE + ConfigUri.MY_TMDB_API_KEY;
+                break;
+            case 2:
+                urlRequest = "";
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -135,17 +148,13 @@ public class MainPosterActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.menu_item_setting:
                 goToSetting();
                 return true;
             case R.id.menu_item_refresh:
-                requestDataPosterMovie();
+                if (PreferenceSettingOrder.STATE_ORDER == 2)  getSupportLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+                else requestDataPosterMovie();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -153,33 +162,36 @@ public class MainPosterActivity extends AppCompatActivity implements
     }
 
     private void requestDataPosterMovie() {
-        setUrlRequestBaseOnSetting();
-        if (isOnline()) {
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-            StringRequest strRequest = new StringRequest(Request.Method.GET, urlRequest, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    Gson gson = gsonBuilder.create();
-                    dataMovieParser = gson.fromJson(response, DataMovieParser.class);
-                    RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
-                    adaterItemPoster.notifyDataSetChanged();
-                    rcViewMain.setAdapter(adaterItemPoster);
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Fail send request to server", Toast.LENGTH_LONG).show();
-                }
-            });
-            requestQueue.add(strRequest);
+        if (PreferenceSettingOrder.STATE_ORDER == 2) {
+            mItemMovieAdapter = new ItemMovieAdapter(this);
+            getSupportLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+            rcViewMain.setAdapter(mItemMovieAdapter);
         } else {
-            Toast.makeText(getApplicationContext(), "You are offline", Toast.LENGTH_LONG).show();
+            setUrlRequestBaseOnSetting();
+            if (isOnline()) {
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
+                StringRequest strRequest = new StringRequest(Request.Method.GET, urlRequest, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        Gson gson = gsonBuilder.create();
+                        dataMovieParser = gson.fromJson(response, DataMovieParser.class);
+                        RecycleItemMainPoster adaterItemPoster = new RecycleItemMainPoster(getApplicationContext(), dataMovieParser.results);
+                        adaterItemPoster.notifyDataSetChanged();
+                        rcViewMain.setAdapter(adaterItemPoster);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Fail send request to server", Toast.LENGTH_LONG).show();
+                    }
+                });
+                requestQueue.add(strRequest);
+            } else {
+                Toast.makeText(getApplicationContext(), "You are offline", Toast.LENGTH_LONG).show();
+            }
         }
-
-
     }
 
     private boolean isOnline() {
@@ -235,6 +247,7 @@ public class MainPosterActivity extends AppCompatActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<Cursor>(this) {
             Cursor mTaskData = null;
+
             @Override
             public Cursor loadInBackground() {
                 return null;
@@ -246,8 +259,7 @@ public class MainPosterActivity extends AppCompatActivity implements
                     deliverResult(mTaskData);
                     Log.d("M_onStartLoading", "start load data.");
 
-                }
-                else {
+                } else {
                     forceLoad();
                     Log.d("M_onStartLoading", "Forece load data.");
                 }
@@ -264,7 +276,7 @@ public class MainPosterActivity extends AppCompatActivity implements
                                     null,
                                     BaseMovie.MovieListEntry.COLUMN_MOVIE_TITLE
                             );
-                }catch (Exception e){
+                } catch (Exception e) {
                     Log.e("M_onLoadInBackground", "Failed to asynchronously load data.");
                     e.printStackTrace();
                     return null;

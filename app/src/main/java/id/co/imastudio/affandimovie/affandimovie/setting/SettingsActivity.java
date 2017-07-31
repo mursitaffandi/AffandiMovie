@@ -4,7 +4,6 @@ package id.co.imastudio.affandimovie.affandimovie.setting;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,19 +16,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import id.co.imastudio.affandimovie.affandimovie.R;
 import id.co.imastudio.affandimovie.affandimovie.global.PreferenceSettingOrder;
-import id.co.imastudio.affandimovie.affandimovie.model.MessageEvent;
+import id.co.imastudio.affandimovie.affandimovie.util.MessageEvent;
 
-/**
- * A {@link PreferenceActivity} that presents a set of application settings. On
- * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
- * the list of settings.
- * <p>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
- */
 public class SettingsActivity extends AppCompatActivity {
     private static String indexSelected = "";
 
@@ -39,12 +27,9 @@ public class SettingsActivity extends AppCompatActivity {
             String stringValue = value.toString();
             indexSelected = stringValue;
             if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
 
-                // Set the summary to reflect the new value.
                 preference.setSummary(
                         index >= 0
                                 ? listPreference.getEntries()[index]
@@ -61,11 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.pref_with_actionbar);
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, new PreferenceDataShow()).commit();
-
-        // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-        // to their values. When their values change, their summaries are
-        // updated to reflect the new value, per the Android Design
-        // guidelines.
     }
 
     public static class PreferenceDataShow extends PreferenceFragment {
@@ -80,6 +60,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
             if (PreferenceSettingOrder.STATE_ORDER == 1) {
                 listPreferenceOrder.setValueIndex(1);
+            }
+            if (PreferenceSettingOrder.STATE_ORDER == 2){
+                listPreferenceOrder.setValueIndex(2);
             }
             bindPreferenceSummaryToValue(findPreference("example_list"));
         }

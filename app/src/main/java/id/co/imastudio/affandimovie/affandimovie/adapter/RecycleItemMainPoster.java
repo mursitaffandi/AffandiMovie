@@ -12,7 +12,6 @@ import java.util.List;
 
 import id.co.imastudio.affandimovie.affandimovie.R;
 import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
-import id.co.imastudio.affandimovie.affandimovie.global.MyApplication;
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 import id.co.imastudio.affandimovie.affandimovie.holder.HolderRecycleMainPoster;
 

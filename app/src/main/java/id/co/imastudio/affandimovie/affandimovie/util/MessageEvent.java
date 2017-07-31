@@ -1,4 +1,4 @@
-package id.co.imastudio.affandimovie.affandimovie.model;
+package id.co.imastudio.affandimovie.affandimovie.util;
 
 public class MessageEvent {
 

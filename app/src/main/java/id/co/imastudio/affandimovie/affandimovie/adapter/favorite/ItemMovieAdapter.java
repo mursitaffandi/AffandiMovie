@@ -3,6 +3,8 @@ package id.co.imastudio.affandimovie.affandimovie.adapter.favorite;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
@@ -28,7 +30,9 @@ public class ItemMovieAdapter extends RecyclerView.Adapter<HolderRecycleMainPost
 
     @Override
     public HolderRecycleMainPoster onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_poster_movie, null);
+        HolderRecycleMainPoster holderItem = new HolderRecycleMainPoster(view);
+        return holderItem;
     }
 
     @Override

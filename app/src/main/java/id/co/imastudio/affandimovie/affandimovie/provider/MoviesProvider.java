@@ -116,7 +116,7 @@ public class MoviesProvider extends ContentProvider {
                 long _id = db.insert(BaseMovie.MovieListEntry.TABLE_MOVIE_NAME, null, values);
                 // insert unless it is already contained in the database
                 if (_id > 0) {
-                    returnUri = BaseMovie.MovieListEntry.buildFlavorsUri(_id);
+                    returnUri = ContentUris.withAppendedId(BaseMovie.MovieListEntry.CONTENT_URI, _id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into: " + uri);
                 }
