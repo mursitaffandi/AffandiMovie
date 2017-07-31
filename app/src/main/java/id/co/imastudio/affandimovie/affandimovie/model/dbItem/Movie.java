@@ -5,18 +5,14 @@ import android.os.Parcelable;
 
 import id.co.imastudio.affandimovie.affandimovie.model.DataMovieParser;
 
-/**
- * Created by Ingat Mati on 30/07/2017.
- */
-
 public class Movie implements Parcelable {
-    public int movie_id;
-    public String movie_title;
-    public String movie_rate;
-    public String movie_poster_path;
-    public String movie_overview;
-    public String movie_release_date;
-    public String movie_backdrop_path;
+    private int movie_id;
+    private String movie_title;
+    private String movie_rate;
+    private String movie_poster_path;
+    private String movie_overview;
+    private String movie_release_date;
+    private String movie_backdrop_path;
 
     public int getMovie_id() {
         return movie_id;
@@ -112,7 +108,7 @@ public class Movie implements Parcelable {
         dest.writeString(this.movie_backdrop_path);
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         this.movie_id = in.readInt();
         this.movie_title = in.readString();
         this.movie_rate = in.readString();

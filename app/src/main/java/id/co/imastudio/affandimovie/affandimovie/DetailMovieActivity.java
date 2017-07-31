@@ -51,28 +51,39 @@ import static id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovi
 
 public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
+    private
     Toolbar toolbar;
     @BindView(R.id.tvSynopsis)
+    private
     TextView tvsynopsis;
     @BindView(R.id.tvRate)
+    private
     TextView tvuserRating;
     @BindView(R.id.tvReleaseDate)
+    private
     TextView tvreleaseDate;
     @BindView(R.id.ivPosterDetail)
+    private
     ImageView ivmoviePoster;
     @BindView(R.id.iv_detail_header_parallax)
+    private
     ImageView ivheaderBackdrop;
     @BindView(R.id.toolbar_layout)
+    private
     CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.btnSaveFavorite)
+    private
     ImageView btnFavorite;
 
     @BindView(R.id.rcV_detail_trailer)
+    private
     RecyclerView rvTrailer;
     @BindView(R.id.rcV_detail_review)
+    private
     RecyclerView rvReview;
 
     @BindView(R.id.tvdetailnoReviewView)
+    private
     TextView tvNotFoundReview;
 
     private DataTrailerParser dataTrailerParcel;
@@ -86,9 +97,9 @@ public class DetailMovieActivity extends AppCompatActivity {
     private static boolean sIsFavorite = false;
     private static boolean sAvailableDB = false;
 
-    LinearLayoutManager verticalLayoutManager;
-    GsonBuilder gsonBuilder;
-    Gson gson;
+    private LinearLayoutManager verticalLayoutManager;
+    private GsonBuilder gsonBuilder;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,9 +342,6 @@ public class DetailMovieActivity extends AppCompatActivity {
         getContentResolver().delete(uri, null, null);
         if (uri != null) {
             Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
-            Log.d("onClickRemoveTask", "delete if");
-        } else {
-            Log.d("onClickRemoveTask", "delete else");
         }
     }
 

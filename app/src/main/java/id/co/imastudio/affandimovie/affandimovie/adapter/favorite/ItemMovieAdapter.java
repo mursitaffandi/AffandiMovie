@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,9 +19,9 @@ import id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie;
 import id.co.imastudio.affandimovie.affandimovie.model.dbItem.Movie;
 
 public class ItemMovieAdapter extends RecyclerView.Adapter<HolderRecycleMainPoster> {
-    private Context mContext;
+    private final Context mContext;
     private Cursor mCursor;
-    public List<Movie> slistMovie = new ArrayList<>();
+    public final List<Movie> slistMovie = new ArrayList<>();
 
     public ItemMovieAdapter(Context mContext) {
         this.mContext = mContext;
@@ -31,8 +30,7 @@ public class ItemMovieAdapter extends RecyclerView.Adapter<HolderRecycleMainPost
     @Override
     public HolderRecycleMainPoster onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_poster_movie, null);
-        HolderRecycleMainPoster holderItem = new HolderRecycleMainPoster(view);
-        return holderItem;
+        return new HolderRecycleMainPoster(view);
     }
 
     @Override

@@ -93,8 +93,7 @@
             android:id="@+id/rcV_detail_trailer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvTrailer"
-            ></android.support.v7.widget.RecyclerView>
+            android:layout_below="@+id/tvTrailer" />
 
         <TextView
             android:id="@+id/tvReview"

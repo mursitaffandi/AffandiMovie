@@ -6,12 +6,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import id.co.imastudio.affandimovie.affandimovie.global.ConfigUri;
 import id.co.imastudio.affandimovie.affandimovie.global.contract.BaseMovie;
@@ -48,7 +45,7 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri){
+    public String getType(@NonNull Uri uri){
         final int match = sUriMatcher.match(uri);
 
         switch (match){
@@ -159,9 +156,9 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs){
+    public int update(@NonNull Uri uri, ContentValues contentValues, String selection, String[] selectionArgs){
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        int numUpdated = 0;
+        int numUpdated;
 
         if (contentValues == null){
             throw new IllegalArgumentException("Cannot have null content values");

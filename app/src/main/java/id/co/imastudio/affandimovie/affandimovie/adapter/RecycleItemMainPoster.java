@@ -27,8 +27,7 @@ public class RecycleItemMainPoster extends RecyclerView.Adapter<HolderRecycleMai
     @Override
     public HolderRecycleMainPoster onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_poster_movie, null);
-        HolderRecycleMainPoster holderItem = new HolderRecycleMainPoster(view);
-        return holderItem;
+        return new HolderRecycleMainPoster(view);
     }
 
     @Override

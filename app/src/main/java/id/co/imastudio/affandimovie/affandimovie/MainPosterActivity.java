@@ -53,6 +53,7 @@ public class MainPosterActivity extends AppCompatActivity implements
     private DataMovieParser dataMovieParser;
     private String urlRequest;
     @BindView(R.id.rcView_main_poster)
+    private
     RecyclerView rcViewMain;
     private final String TAG_MOVIE_PARCEL = "parcel";
 
@@ -226,22 +227,6 @@ public class MainPosterActivity extends AppCompatActivity implements
             requestDataPosterMovie();
         }
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

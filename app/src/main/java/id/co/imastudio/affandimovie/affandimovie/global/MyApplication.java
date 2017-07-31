@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.stetho.Stetho;
 
-public class MyApplication extends Application {
+class MyApplication extends Application {
     private static Context mContext;
     @Override
     public void onCreate() {
@@ -20,7 +20,7 @@ public class MyApplication extends Application {
                         .build());
     }
 
-    public static Context getContext(){
+    static Context getContext(){
         return mContext;
     }
 }
